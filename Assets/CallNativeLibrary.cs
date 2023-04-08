@@ -7,18 +7,20 @@ using System.Runtime.InteropServices;
 
 public class CallNativeLibrary : MonoBehaviour {
 
-    [DllImport("__Internal")]
+    [DllImport("libnativelib")]
     private static extern int AddTest(int x, int y);
     
-    [DllImport("libpcap", EntryPoint = "pcap_findalldevs")]
-    private static extern int pcap_findalldevs(
-        ref IntPtr /* pcap_if_t** */ alldevs,
-        StringBuilder /* char* */ errbuf
-    );
+    [DllImport("libnativelib", CharSet = CharSet.Ansi)]
+    private static extern IntPtr FindDevice();
+
     void Start()
     {
         int x = 3;
         int y = 10;
         Debug.Log("x + y = " + AddTest(x, y));
+
+        var devicePtr = IntPtr.Zero;
+        var errorBuffer = new StringBuilder(256);
+        Debug.Log(Marshal.PtrToStringAnsi(FindDevice()));
     }
 }
