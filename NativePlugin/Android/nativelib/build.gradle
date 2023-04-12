@@ -15,7 +15,6 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags ""
-                targets "nativelib"
             }
         }
     }
