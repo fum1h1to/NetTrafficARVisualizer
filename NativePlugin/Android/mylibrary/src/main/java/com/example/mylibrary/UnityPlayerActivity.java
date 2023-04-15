@@ -12,13 +12,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.os.Process;
 
-import androidx.activity.ComponentActivity;
-
 import com.unity3d.player.IUnityPlayerLifecycleEvents;
 import com.unity3d.player.MultiWindowSupport;
 import com.unity3d.player.UnityPlayer;
 
-public class UnityPlayerActivity extends ComponentActivity implements IUnityPlayerLifecycleEvents
+public class UnityPlayerActivity extends Activity implements IUnityPlayerLifecycleEvents
 {
     protected UnityPlayer mUnityPlayer; // don't change the name of this variable; referenced from native code
 

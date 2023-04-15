@@ -1,22 +1,11 @@
 package com.example.mylibrary;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import org.pcap4j.packet.IpV4Packet;
-
-import com.unity3d.player.UnityPlayer;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -27,21 +16,24 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     static final String CAPTURE_CTRL_ACTIVITY = "com.emanuelef.remote_capture.activities.CaptureCtrl";
     static final String CAPTURE_STATUS_ACTION = "com.emanuelef.remote_capture.CaptureStatus";
     static final String TAG = "PCAP Receiver";
-    Button mStart;
+    static final int START_CAPTURE_CODE = 1000;
+    static final int STOP_CAPTURE_CODE = 1001;
+    static final int STATUS_CAPTURE_CODE = 1002;
     CaptureThread mCapThread;
-    TextView mLog;
     boolean mCaptureRunning = false;
-
-    private final ActivityResultLauncher<Intent> captureStartLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::handleCaptureStartResult);
-    private final ActivityResultLauncher<Intent> captureStopLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::handleCaptureStopResult);
-    private final ActivityResultLauncher<Intent> captureStatusLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this::handleCaptureStatusResult);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        mLog = findViewById(R.id.pkts_log);
+//        mStart = findViewById(R.id.start_btn);
+//        mStart.setOnClickListener(v -> {
+//            if(!mCaptureRunning)
+//                startCapture();
+//            else
+//                stopCapture();
+//        });
 
         if((savedInstanceState != null) && savedInstanceState.containsKey("capture_running"))
             setCaptureRunning(savedInstanceState.getBoolean("capture_running"));
@@ -67,14 +59,14 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     }
 
     @Override
-    protected void onSaveInstanceState(@NonNull Bundle bundle) {
+    protected void onSaveInstanceState(Bundle bundle) {
         bundle.putBoolean("capture_running", mCaptureRunning);
         super.onSaveInstanceState(bundle);
     }
 
     void onPacketReceived(IpV4Packet pkt) {
         IpV4Packet.IpV4Header hdr = pkt.getHeader();
-        mLog.append(String.format("[%s] %s -> %s [%d B]\n",
+        Log.i(TAG, String.format("[%s] %s -> %s [%d B]\n",
                 hdr.getProtocol(),
                 hdr.getSrcAddr().getHostAddress(), hdr.getDstAddr().getHostAddress(),
                 pkt.length()));
@@ -88,13 +80,13 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
         intent.putExtra("action", "get_status");
 
         try {
-            captureStatusLauncher.launch(intent);
+            startActivityForResult(intent, STATUS_CAPTURE_CODE);
         } catch (ActivityNotFoundException e) {
-            Log.d(TAG, "PCAPdroid package not found: " + PCAPDROID_PACKAGE);
+//            Toast.makeText(this, "PCAPdroid package not found: " + PCAPDROID_PACKAGE, Toast.LENGTH_LONG).show();
         }
     }
 
-    public void startCapture() {
+    void startCapture() {
         Log.d(TAG, "Starting PCAPdroid");
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -107,22 +99,22 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
         intent.putExtra("collector_port", "5123");
         //intent.putExtra("app_filter", "org.mozilla.firefox");
 
-        captureStartLauncher.launch(intent);
+        startActivityForResult(intent, START_CAPTURE_CODE);
     }
 
-    public void stopCapture() {
+    void stopCapture() {
         Log.d(TAG, "Stopping PCAPdroid");
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setClassName(PCAPDROID_PACKAGE, CAPTURE_CTRL_ACTIVITY);
         intent.putExtra("action", "stop");
 
-        captureStopLauncher.launch(intent);
+        startActivityForResult(intent, STOP_CAPTURE_CODE);
     }
 
     void setCaptureRunning(boolean running) {
         mCaptureRunning = running;
-        mStart.setText(running ? "Stop Capture" : "Start Capture");
+        Log.d(TAG, running ? "Stop Capture" : "Start Capture");
 
         if(mCaptureRunning && (mCapThread == null)) {
             mCapThread = new CaptureThread(this);
@@ -140,45 +132,48 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
         mCapThread = null;
     }
 
-    void handleCaptureStartResult(final ActivityResult result) {
-        Log.d(TAG, "PCAPdroid start result: " + result);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        if(result.getResultCode() == RESULT_OK) {
-            Log.d(TAG, "Capture started!");
-            setCaptureRunning(true);
-            mLog.setText("");
-        } else
-            Log.d(TAG, "Capture failed to start");
-    }
+        switch (requestCode) {
+            case (START_CAPTURE_CODE):
+                Log.d(TAG, "PCAPdroid start result: " + resultCode);
+                if (resultCode == RESULT_OK) {
+                    setCaptureRunning(true);
+                } else {
 
-    void handleCaptureStopResult(final ActivityResult result) {
-        Log.d(TAG, "PCAPdroid stop result: " + result);
+                }
+                break;
+            case (STOP_CAPTURE_CODE):
+                Log.d(TAG, "PCAPdroid stop result: " + resultCode);
+                if (resultCode == RESULT_OK) {
+                    setCaptureRunning(false);
+                } else {
 
-        if(result.getResultCode() == RESULT_OK) {
-            Log.d(TAG, "Capture stopped!");
-            setCaptureRunning(false);
-        } else
-            Log.d(TAG, "Could not stop capture");
+                }
 
-        Intent intent = result.getData();
-        if((intent != null) && (intent.hasExtra("bytes_sent")))
-            logStats(intent);
-    }
+                if((data != null) && (data.hasExtra("bytes_sent")))
+                    logStats(data);
+                break;
+            case (STATUS_CAPTURE_CODE):
+                Log.d(TAG, "PCAPdroid status result: " + resultCode);
+                if (resultCode == RESULT_OK) {
+                    boolean running = data.getBooleanExtra("running", false);
+                    int verCode = data.getIntExtra("version_code", 0);
+                    String verName = data.getStringExtra("version_name");
 
-    void handleCaptureStatusResult(final ActivityResult result) {
-        Log.d(TAG, "PCAPdroid status result: " + result);
+                    if(verName == null)
+                        verName = "<1.4.6";
 
-        if((result.getResultCode() == RESULT_OK) && (result.getData() != null)) {
-            Intent intent = result.getData();
-            boolean running = intent.getBooleanExtra("running", false);
-            int verCode = intent.getIntExtra("version_code", 0);
-            String verName = intent.getStringExtra("version_name");
+                    Log.d(TAG, "PCAPdroid " + verName + "(" + verCode + "): running=" + running);
+                    setCaptureRunning(running);
+                } else {
 
-            if(verName == null)
-                verName = "<1.4.6";
-
-            Log.d(TAG, "PCAPdroid " + verName + "(" + verCode + "): running=" + running);
-            setCaptureRunning(running);
+                }
+                break;
+            default:
+                break;
         }
     }
 
