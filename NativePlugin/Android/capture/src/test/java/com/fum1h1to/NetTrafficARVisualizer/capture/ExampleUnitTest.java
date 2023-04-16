@@ -1,4 +1,4 @@
-package com.example.mylibrary;
+package com.fum1h1to.NetTrafficARVisualizer.capture;
 
 import org.junit.Test;
 

@@ -49,7 +49,7 @@
         "obj/":true,
         "Obj/":true,
         "ProjectSettings/":true,
-        "temp/":false,
-        "Temp/":false
+        "temp/":true,
+        "Temp/":true
     }
 }

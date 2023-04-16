@@ -1,4 +1,4 @@
-package com.example.mylibrary;
+package com.fum1h1to.NetTrafficARVisualizer.capture;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -15,7 +15,7 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     static final String PCAPDROID_PACKAGE = "com.emanuelef.remote_capture.debug"; // add ".debug" for the debug build of PCAPdroid
     static final String CAPTURE_CTRL_ACTIVITY = "com.emanuelef.remote_capture.activities.CaptureCtrl";
     static final String CAPTURE_STATUS_ACTION = "com.emanuelef.remote_capture.CaptureStatus";
-    static final String TAG = "PCAP Receiver";
+    static final String TAG = "CaptureActivity";
     static final int START_CAPTURE_CODE = 1000;
     static final int STOP_CAPTURE_CODE = 1001;
     static final int STATUS_CAPTURE_CODE = 1002;

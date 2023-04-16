@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.example.mylibrary'
+    namespace 'com.fum1h1to.NetTrafficARVisualizer.capture'
     compileSdk 33
 
     defaultConfig {
@@ -57,7 +57,7 @@ dependencies {
 }
 
 task exportSo(type: Copy){
-    from( 'build/outputs/aar/mylibrary-debug.aar' )
+    from( 'build/outputs/aar/capture-debug.aar' )
     into( '../../../Assets/Plugins/Android' )
 }
 
