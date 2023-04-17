@@ -18,7 +18,7 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     static final String CAPTURE_CTRL_ACTIVITY = "com.emanuelef.remote_capture.activities.CaptureCtrl";
     static final String CAPTURE_STATUS_ACTION = "com.emanuelef.remote_capture.CaptureStatus";
     static final String TAG = "CaptureActivity";
-//    static final String UNITY_SCRIPT_GAMEOBJECT_NAME = "ScriptObject";
+    static final String UNITY_SCRIPT_GAMEOBJECT_NAME = "ScriptObject";
     static final int START_CAPTURE_CODE = 1000;
     static final int STOP_CAPTURE_CODE = 1001;
     static final int STATUS_CAPTURE_CODE = 1002;

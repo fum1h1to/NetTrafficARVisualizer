@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using System;
-using System.Text;
 using UnityEngine;
 using TMPro;
 
-public class Capture : MonoBehaviour {
+public class UIManager : MonoBehaviour
+{
   [SerializeField] TextMeshProUGUI selectText;
   private AndroidJavaObject mActivity;
   void Start() {
@@ -14,11 +13,7 @@ public class Capture : MonoBehaviour {
     mActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
   }
 
-  void CreateInboundPacketObject(string testText) {
-    Debug.Log("called CreateInboundPacketObject: " + testText);
-  }
-
-  public void OnClick() {
+  public void ToggleCapture() {
     bool mCaptureRunning = mActivity.Call<bool>("getCaptureRunning");
     if (mCaptureRunning) {
       mActivity.Call("stopCapture");
