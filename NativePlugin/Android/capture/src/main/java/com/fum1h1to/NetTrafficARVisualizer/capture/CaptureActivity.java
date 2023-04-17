@@ -18,11 +18,11 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     static final String CAPTURE_CTRL_ACTIVITY = "com.emanuelef.remote_capture.activities.CaptureCtrl";
     static final String CAPTURE_STATUS_ACTION = "com.emanuelef.remote_capture.CaptureStatus";
     static final String TAG = "CaptureActivity";
-    static final String UNITY_SCRIPT_GAMEOBJECT_NAME = "ScriptObject";
     static final int START_CAPTURE_CODE = 1000;
     static final int STOP_CAPTURE_CODE = 1001;
     static final int STATUS_CAPTURE_CODE = 1002;
     CaptureThread mCapThread;
+    PacketCreater mPacketCreater;
     boolean mCaptureRunning = false;
 
     @Override
@@ -33,6 +33,8 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
             setCaptureRunning(savedInstanceState.getBoolean("capture_running"));
         else
             queryCaptureStatus();
+
+        mPacketCreater = new PacketCreater(this);
 
         // will call the "update" method when the capture status changes
         MyBroadcastReceiver.CaptureObservable.getInstance().addObserver(this);
@@ -64,7 +66,8 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
                 hdr.getProtocol(),
                 hdr.getSrcAddr().getHostAddress(), hdr.getDstAddr().getHostAddress(),
                 pkt.length()));
-//        UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateInboundPacketObject", "test");
+
+        mPacketCreater.createPacket(hdr.getSrcAddr().getHostAddress(), hdr.getDstAddr().getHostAddress(), String.valueOf(hdr.getProtocol()), pkt.length());
     }
 
     void queryCaptureStatus() {
