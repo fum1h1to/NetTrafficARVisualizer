@@ -48,6 +48,28 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        // アプリ起動時に、デバイスの向いている方角を取得
+        mPacketCreater.initSensor();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        mPacketCreater.stopSensor();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        mPacketCreater.stopSensor();
+    }
+
+    @Override
     public void update(Observable o, Object arg) {
         boolean capture_running = (boolean)arg;
         Log.d(TAG, "capture_running: " + capture_running);
@@ -68,6 +90,10 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
                 pkt.length()));
 
         mPacketCreater.createPacket(hdr.getSrcAddr().getHostAddress(), hdr.getDstAddr().getHostAddress(), String.valueOf(hdr.getProtocol()), pkt.length());
+    }
+
+    public void test() {
+        mPacketCreater.createPacket("8.8.8.8", "192.168.1.1", "TCP", 1);
     }
 
     void queryCaptureStatus() {
