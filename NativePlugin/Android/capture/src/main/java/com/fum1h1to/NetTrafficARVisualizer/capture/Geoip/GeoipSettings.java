@@ -1,7 +1,6 @@
-package com.fum1h1to.NetTrafficARVisualizer.capture;
+package com.fum1h1to.NetTrafficARVisualizer.capture.Geoip;
 
 import android.app.Activity;
-import android.util.Log;
 
 import java.util.concurrent.Callable;
 
@@ -15,6 +14,9 @@ public class GeoipSettings implements Callable<Boolean> {
 
     @Override
     public Boolean call() {
+        if(Geolocation.isDbFound(mActivity)) {
+            return true;
+        }
         return Geolocation.downloadDb(mActivity);
     }
 }

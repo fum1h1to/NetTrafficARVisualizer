@@ -1,9 +1,11 @@
-package com.fum1h1to.NetTrafficARVisualizer.capture;
+package com.fum1h1to.NetTrafficARVisualizer.capture.Geoip;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
+import com.fum1h1to.NetTrafficARVisualizer.capture.Utils;
 import com.maxmind.db.Reader;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.model.CityResponse;
@@ -15,21 +17,37 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class Geolocation {
     private static final String TAG = "Geolocation";
+    private Activity mActivity;
     private final Context mContext;
     private DatabaseReader mCityReader;
 
-    public Geolocation(Context ctx) {
-        mContext = ctx;
-        openDb();
+    public Geolocation(Activity activity) {
+        mContext = activity;
+        mActivity = activity;
     }
 
     @Override
     public void finalize() {
         Utils.safeClose(mCityReader);
         mCityReader = null;
+    }
+
+    public void initDb() {
+        ExecutorService ex = Executors.newSingleThreadExecutor();
+        Future<Boolean> futureResult = ex.submit(new GeoipSettings(mActivity));
+        try {
+            if(futureResult.get()) {
+                openDb();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void openDb() {
@@ -52,22 +70,19 @@ public class Geolocation {
         }
     }
 
-//    public static Date getDbDate(Context ctx) {
-//        try {
-//            return getDbDate(getCityFile(ctx));
-//        } catch (IOException ignored) {
-//            return null;
-//        }
-//    }
-//
-//    public static long getDbSize(Context ctx) {
-//        return getCityFile(ctx).length();
-//    }
+    public static boolean isDbFound(Context ctx) {
+        try {
+            getDbDate(getCityFile(ctx));
+            return true;
+        } catch (IOException ignored) {
+            return false;
+        }
+    }
 
-//    @SuppressWarnings("ResultOfMethodCallIgnored")
-//    public void deleteDb(Context ctx) {
-//        getCityFile(ctx).delete();
-//    }
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public void deleteDb(Context ctx) {
+        getCityFile(ctx).delete();
+    }
 
     @SuppressLint("SimpleDateFormat")
     public static boolean downloadDb(Context ctx) {
@@ -107,16 +122,14 @@ public class Geolocation {
         }
     }
 
-    public double[] getLatLng(String ip) {
+    public Coordinate getLatLng(String ip) {
         if(mCityReader != null) {
             try {
                 InetAddress ipAddress = InetAddress.getByName(ip);
                 CityResponse response = mCityReader.city(ipAddress);
                 Location location = response.getLocation();
-                Log.d(TAG, String.format("lat: %s, lng: %s\n",
-                        location.getLatitude(), location.getLongitude()));
 
-                return new double[]{location.getLatitude(), location.getLongitude()};
+                return new Coordinate(location.getLatitude(), location.getLongitude());
             } catch (Exception e) {
                 e.printStackTrace();
             }

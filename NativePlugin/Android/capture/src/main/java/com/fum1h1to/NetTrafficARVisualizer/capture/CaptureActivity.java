@@ -1,7 +1,5 @@
 package com.fum1h1to.NetTrafficARVisualizer.capture;
 
-import com.unity3d.player.UnityPlayer;
-
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,25 +46,29 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        // アプリ起動時に、デバイスの向いている方角を取得
-        mPacketCreater.initSensor();
+    protected void onStart() {
+        super.onStart();
+        mPacketCreater.init();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+    }
 
-        mPacketCreater.stopSensor();
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // アプリ起動時に、デバイスの向いている方角を取得
+        mPacketCreater.getLocalSensorManager().updateDeviceBearing();
+
+        mPacketCreater.getLocalLocationManager().updateNowLocation();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        mPacketCreater.stopSensor();
     }
 
     @Override
