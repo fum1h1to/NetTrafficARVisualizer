@@ -49,9 +49,10 @@ public class PacketCreater {
         }
 
         Coordinate nowLocation = mLocalLocationManager.getNowLocation();
-        double bearing = getBearing(srcLatLng.getLatitude(), srcLatLng.getLongitude(), nowLocation.getLatitude(), nowLocation.getLongitude());
-        Log.d(TAG, "srcAddr Bearing: " + Math.toDegrees(bearing));
-        double vBearing = bearing - mLocalSensorManager.getDeviceBearing(); // -180 ～ 180
+        double bearing = getBearing(nowLocation.getLatitude(), nowLocation.getLongitude(), srcLatLng.getLatitude(), srcLatLng.getLongitude());
+        Log.d(TAG, String.format("srcAddr: %s, lat1: %.5f, lon1: %.5f, lat2: %.5f, lon2: %.5f -> bearing: %.5f",
+                srcAddr, nowLocation.getLatitude(), nowLocation.getLongitude(), srcLatLng.getLatitude(), srcLatLng.getLongitude(), Math.toDegrees(bearing)));
+        double vBearing = (bearing - mLocalSensorManager.getDeviceBearing()) % Math.toRadians(360);
         double x = 0;
         double y = 0;
         double z = 0;
@@ -79,11 +80,10 @@ public class PacketCreater {
         double radLon2 = Math.toRadians(lon2);
 
         double dLon = radLon2 - radLon1;
-
         double y = Math.sin(dLon) * Math.cos(radLat2);
         double x = Math.cos(radLat1) * Math.sin(radLat2) - Math.sin(radLat1) * Math.cos(radLat2) * Math.cos(dLon);
 
-        double bearing = Math.atan2(y, x);
+        double bearing = (Math.atan2(y, x) + Math.toRadians(360)) % Math.toRadians(360);
         return bearing;
     }
 

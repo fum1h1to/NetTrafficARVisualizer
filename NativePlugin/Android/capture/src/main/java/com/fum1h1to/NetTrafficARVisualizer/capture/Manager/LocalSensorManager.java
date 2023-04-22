@@ -41,6 +41,7 @@ public class LocalSensorManager implements SensorEventListener  {
 
     private void stopSensor() {
         Log.d(TAG, "called stopSensor");
+        Log.d(TAG, "deviceBearing: " + Double.toString(Math.toDegrees(getDeviceBearing())));
         mSensorManager.unregisterListener( this );
     }
 

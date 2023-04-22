@@ -33,6 +33,7 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
             queryCaptureStatus();
 
         mPacketCreater = new PacketCreater(this);
+        mPacketCreater.init();
 
         // will call the "update" method when the capture status changes
         MyBroadcastReceiver.CaptureObservable.getInstance().addObserver(this);
@@ -48,7 +49,6 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     @Override
     protected void onStart() {
         super.onStart();
-        mPacketCreater.init();
     }
 
     @Override
@@ -59,9 +59,6 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     @Override
     protected void onResume() {
         super.onResume();
-
-        // アプリ起動時に、デバイスの向いている方角を取得
-        mPacketCreater.getLocalSensorManager().updateDeviceBearing();
 
         mPacketCreater.getLocalLocationManager().updateNowLocation();
     }
