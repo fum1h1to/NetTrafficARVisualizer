@@ -14,7 +14,6 @@ public class Packet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("packet Start");
 
         GameObject mainCamObj = GameObject.Find("AR Camera");
         arCamera = mainCamObj.GetComponent<Camera>();
