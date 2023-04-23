@@ -11,9 +11,11 @@ GameObject:
   - component: {fileID: 3751759380999979444}
   - component: {fileID: 5546727362028524470}
   - component: {fileID: 7849747558714648600}
+  - component: {fileID: -518205002019860256}
   - component: {fileID: 2210841149914523599}
+  - component: {fileID: -140952429671268484}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Packet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,6 +86,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-518205002019860256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1926052179555635573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d937fd7bebac28c40896554b5b398629, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!65 &2210841149914523599
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -97,3 +111,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!111 &-140952429671268484
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1926052179555635573}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
