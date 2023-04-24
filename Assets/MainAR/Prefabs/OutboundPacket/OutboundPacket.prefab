@@ -11,12 +11,12 @@ GameObject:
   - component: {fileID: 3751759380999979444}
   - component: {fileID: 5546727362028524470}
   - component: {fileID: 7849747558714648600}
-  - component: {fileID: -518205002019860256}
+  - component: {fileID: 649055031511585624}
   - component: {fileID: 2210841149914523599}
   - component: {fileID: -140952429671268484}
   - component: {fileID: -4572239985487686887}
   m_Layer: 0
-  m_Name: Packet
+  m_Name: OutboundPacket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bff78d5bfe70cfb48a5c3ebcf053fcce, type: 2}
+  - {fileID: 2100000, guid: dc76f19f6e476b749a67b96132dbbbb9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -87,7 +87,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-518205002019860256
+--- !u!114 &649055031511585624
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,7 +96,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1926052179555635573}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d937fd7bebac28c40896554b5b398629, type: 3}
+  m_Script: {fileID: 11500000, guid: 21612535bcd3f3648818d65b53f982dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!65 &2210841149914523599
@@ -148,7 +148,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f02edfa8f71a91443b848f6e8aed681e, type: 2}
+  - {fileID: 2100000, guid: 22962a35d8703814a8da3a01d1753f0e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

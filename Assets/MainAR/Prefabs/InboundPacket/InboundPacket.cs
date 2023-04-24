@@ -1,17 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.ARSubsystems;
-using UnityEngine.XR.ARFoundation;
 
-public class Packet : MonoBehaviour
+public class InboundPacket : MonoBehaviour
 {
     private float packetAnimationTime = 8f;
     private float packetAnimationAfterTime = 6f;
     private Vector3 position;
     private Vector3 velocity;
-    private Vector3 localScale;
-    private Vector3 diffScale;
     private Camera arCamera;
 
     // Start is called before the first frame update
@@ -22,8 +18,6 @@ public class Packet : MonoBehaviour
         arCamera = mainCamObj.GetComponent<Camera>();
 
         position = transform.position;
-        localScale = transform.localScale;
-        diffScale = localScale / packetAnimationTime;
     }
 
     // Update is called once per frame
@@ -32,7 +26,7 @@ public class Packet : MonoBehaviour
         if (packetAnimationTime >= 0f) {
             var acceleration = Vector3.zero;
 
-            var diff = (arCamera.transform.position - new Vector3(0.1f, 0.1f, 0.1f)) - position;
+            var diff = (arCamera.transform.position - new Vector3(0, 0.1f, 0)) - position;
             acceleration += (diff - velocity * packetAnimationTime) * 2f / (packetAnimationTime * packetAnimationTime);
 
             velocity += acceleration * Time.deltaTime;

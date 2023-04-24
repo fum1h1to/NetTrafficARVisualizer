@@ -92,7 +92,8 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     }
 
     public void test() {
-        mPacketCreater.createPacket("8.8.8.8", "192.168.1.1", "TCP", 1);
+        mPacketCreater.createPacket("8.8.8.8", "10.215.173.1", "TCP", 1);
+        mPacketCreater.createPacket("10.215.173.1","8.8.8.8", "TCP", 1);
     }
 
     void queryCaptureStatus() {

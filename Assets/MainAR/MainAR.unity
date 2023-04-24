@@ -297,7 +297,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef4caf9e42b88b343bf09067fab9f1d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  packetObject: {fileID: 1926052179555635573, guid: 6bcc6d63a147b4542a81dff716bfe8c0, type: 3}
+  inboundPacketObject: {fileID: 1926052179555635573, guid: 6bcc6d63a147b4542a81dff716bfe8c0, type: 3}
+  outboundPacketObject: {fileID: 1926052179555635573, guid: 11c242285e7d3e34e8979d4fe8c490d9, type: 3}
 --- !u!1 &719847144
 GameObject:
   m_ObjectHideFlags: 0

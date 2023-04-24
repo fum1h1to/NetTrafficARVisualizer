@@ -42,35 +42,70 @@ public class PacketCreater {
         if(mLocalSensorManager.getDeviceBearing() == 361) {
             return;
         }
-        // まずは、inboudの方から作成。
-        Coordinate srcLatLng = mGeolocation.getLatLng(srcAddr);
-        if (srcLatLng == null) {
-            return;
+
+        if (srcAddr.equals("10.215.173.1")) {
+            // outboundの時
+            Coordinate dstLatLng = mGeolocation.getLatLng(dstAddr);
+            if (dstLatLng == null) {
+                return;
+            }
+
+            Coordinate nowLocation = mLocalLocationManager.getNowLocation();
+            double bearing = getBearing(nowLocation.getLatitude(), nowLocation.getLongitude(), dstLatLng.getLatitude(), dstLatLng.getLongitude());
+            Log.d(TAG, String.format("srcAddr: %s, lat1: %.5f, lon1: %.5f, lat2: %.5f, lon2: %.5f -> bearing: %.5f",
+                    srcAddr, nowLocation.getLatitude(), nowLocation.getLongitude(), dstLatLng.getLatitude(), dstLatLng.getLongitude(), Math.toDegrees(bearing)));
+            double vBearing = (bearing - mLocalSensorManager.getDeviceBearing()) % Math.toRadians(360);
+            double x = 0;
+            double y = 0;
+            double z = 0;
+
+            double radius = 5;
+            x = radius * Math.sin(vBearing);
+            z = radius * Math.cos(vBearing);
+
+            String message = "{" +
+                    "\"x\": " + Double.toString(x) + "," +
+                    "\"y\": " + Double.toString(0) + "," +
+                    "\"z\": " + Double.toString(z) + "," +
+                    "\"srcAddr\": \"" + srcAddr + "\"," +
+                    "\"dstAddr\": \"" + dstAddr + "\"," +
+                    "\"protocol\": \"" + protocol + "\"" +
+                    "}";
+
+            UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateOutboundPacketObject", message);
+
+        } else {
+            // inboundの時
+            Coordinate srcLatLng = mGeolocation.getLatLng(srcAddr);
+            if (srcLatLng == null) {
+                return;
+            }
+
+            Coordinate nowLocation = mLocalLocationManager.getNowLocation();
+            double bearing = getBearing(nowLocation.getLatitude(), nowLocation.getLongitude(), srcLatLng.getLatitude(), srcLatLng.getLongitude());
+            Log.d(TAG, String.format("srcAddr: %s, lat1: %.5f, lon1: %.5f, lat2: %.5f, lon2: %.5f -> bearing: %.5f",
+                    srcAddr, nowLocation.getLatitude(), nowLocation.getLongitude(), srcLatLng.getLatitude(), srcLatLng.getLongitude(), Math.toDegrees(bearing)));
+            double vBearing = (bearing - mLocalSensorManager.getDeviceBearing()) % Math.toRadians(360);
+            double x = 0;
+            double y = 0;
+            double z = 0;
+
+            double radius = 5;
+            x = radius * Math.sin(vBearing);
+            z = radius * Math.cos(vBearing);
+
+            String message = "{" +
+                    "\"x\": " + Double.toString(x) + "," +
+                    "\"y\": " + Double.toString(0) + "," +
+                    "\"z\": " + Double.toString(z) + "," +
+                    "\"srcAddr\": \"" + srcAddr + "\"," +
+                    "\"dstAddr\": \"" + dstAddr + "\"," +
+                    "\"protocol\": \"" + protocol + "\"" +
+                    "}";
+
+            UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateInboundPacketObject", message);
         }
 
-        Coordinate nowLocation = mLocalLocationManager.getNowLocation();
-        double bearing = getBearing(nowLocation.getLatitude(), nowLocation.getLongitude(), srcLatLng.getLatitude(), srcLatLng.getLongitude());
-        Log.d(TAG, String.format("srcAddr: %s, lat1: %.5f, lon1: %.5f, lat2: %.5f, lon2: %.5f -> bearing: %.5f",
-                srcAddr, nowLocation.getLatitude(), nowLocation.getLongitude(), srcLatLng.getLatitude(), srcLatLng.getLongitude(), Math.toDegrees(bearing)));
-        double vBearing = (bearing - mLocalSensorManager.getDeviceBearing()) % Math.toRadians(360);
-        double x = 0;
-        double y = 0;
-        double z = 0;
-
-        double radius = 5;
-        x = radius * Math.sin(vBearing);
-        z = radius * Math.cos(vBearing);
-
-        String message = "{" +
-                "\"x\": " + Double.toString(x) + "," +
-                "\"y\": " + Double.toString(0) + "," +
-                "\"z\": " + Double.toString(z) + "," +
-                "\"srcAddr\": \"" + srcAddr + "\"," +
-                "\"dstAddr\": \"" + dstAddr + "\"," +
-                "\"protocol\": \"" + protocol + "\"" +
-                "}";
-
-        UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateInboundPacketObject", message);
     }
 
     private double getBearing(double lat1, double lon1, double lat2, double lon2) {
