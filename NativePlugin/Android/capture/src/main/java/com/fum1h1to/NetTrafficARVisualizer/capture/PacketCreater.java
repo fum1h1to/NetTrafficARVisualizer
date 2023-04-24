@@ -57,7 +57,7 @@ public class PacketCreater {
         double y = 0;
         double z = 0;
 
-        double radius = 1;
+        double radius = 5;
         x = radius * Math.sin(vBearing);
         z = radius * Math.cos(vBearing);
 

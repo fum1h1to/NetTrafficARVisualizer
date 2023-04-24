@@ -6,9 +6,12 @@ using UnityEngine.XR.ARFoundation;
 
 public class Packet : MonoBehaviour
 {
-    private float packetAnimationTime = 5f;
+    private float packetAnimationTime = 8f;
+    private float packetAnimationAfterTime = 6f;
     private Vector3 position;
     private Vector3 velocity;
+    private Vector3 localScale;
+    private Vector3 diffScale;
     private Camera arCamera;
 
     // Start is called before the first frame update
@@ -19,23 +22,32 @@ public class Packet : MonoBehaviour
         arCamera = mainCamObj.GetComponent<Camera>();
 
         position = transform.position;
+        localScale = transform.localScale;
+        diffScale = localScale / packetAnimationTime;
     }
 
     // Update is called once per frame
     void Update()
     {
-        var acceleration = Vector3.zero;
+        if (packetAnimationTime >= 0f) {
+            var acceleration = Vector3.zero;
 
-        var diff = arCamera.transform.position - position;
-        acceleration += (diff - velocity * packetAnimationTime) * 2f / (packetAnimationTime * packetAnimationTime);
+            var diff = (arCamera.transform.position - new Vector3(0.1f, 0.1f, 0.1f)) - position;
+            acceleration += (diff - velocity * packetAnimationTime) * 2f / (packetAnimationTime * packetAnimationTime);
 
-        packetAnimationTime -= Time.deltaTime;
-        if (packetAnimationTime <= 0f) {
-            Destroy(this.gameObject);
+            velocity += acceleration * Time.deltaTime;
+            position += velocity * Time.deltaTime;
+            transform.position = position;
+
+            packetAnimationTime -= Time.deltaTime;
+        } else {
+            if (packetAnimationAfterTime >= 0f) {
+                transform.localScale = Vector3.zero;
+                packetAnimationAfterTime -= Time.deltaTime;
+            } else {
+
+                Destroy(this.gameObject);
+            }
         }
-
-        velocity += acceleration * Time.deltaTime;
-        position += velocity * Time.deltaTime;
-        transform.position = position;
     }
 }
