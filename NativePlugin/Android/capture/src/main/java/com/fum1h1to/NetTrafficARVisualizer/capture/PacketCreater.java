@@ -63,13 +63,16 @@ public class PacketCreater {
             x = radius * Math.sin(vBearing);
             z = radius * Math.cos(vBearing);
 
+            String countryCode = mGeolocation.getCountryCode(dstAddr);
+
             String message = "{" +
                     "\"x\": " + Double.toString(x) + "," +
                     "\"y\": " + Double.toString(0) + "," +
                     "\"z\": " + Double.toString(z) + "," +
                     "\"srcAddr\": \"" + srcAddr + "\"," +
                     "\"dstAddr\": \"" + dstAddr + "\"," +
-                    "\"protocol\": \"" + protocol + "\"" +
+                    "\"protocol\": \"" + protocol + "\"," +
+                    "\"countryCode\": \"" + countryCode + "\"" +
                     "}";
 
             UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateOutboundPacketObject", message);
@@ -94,13 +97,16 @@ public class PacketCreater {
             x = radius * Math.sin(vBearing);
             z = radius * Math.cos(vBearing);
 
+            String countryCode = mGeolocation.getCountryCode(srcAddr);
+
             String message = "{" +
                     "\"x\": " + Double.toString(x) + "," +
                     "\"y\": " + Double.toString(0) + "," +
                     "\"z\": " + Double.toString(z) + "," +
                     "\"srcAddr\": \"" + srcAddr + "\"," +
                     "\"dstAddr\": \"" + dstAddr + "\"," +
-                    "\"protocol\": \"" + protocol + "\"" +
+                    "\"protocol\": \"" + protocol + "\"," +
+                    "\"countryCode\": \"" + countryCode + "\"" +
                     "}";
 
             UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateInboundPacketObject", message);

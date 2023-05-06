@@ -32,13 +32,15 @@ public class NativeCodeInterface : MonoBehaviour
 
     public void CreateInboundPacketObject(string message) {
         NativeCodeJson json = JsonUtility.FromJson<NativeCodeJson>(message);
-        Instantiate(inboundPacketObject, new Vector3(json.x, json.y, json.z), Quaternion.identity);
-    }
+        InboundPacket inboutPacket = (Instantiate(inboundPacketObject, new Vector3(json.x, json.y, json.z), Quaternion.identity) as GameObject).GetComponent<InboundPacket>();
+        inboutPacket.SetCountryCode(json.countryCode);
+    }  
 
     public void CreateOutboundPacketObject(string message) {
         NativeCodeJson json = JsonUtility.FromJson<NativeCodeJson>(message);
         OutboundPacket outboutPacket = (Instantiate(outboundPacketObject , arCamera.transform.position - new Vector3(0, 0.1f, 0), Quaternion.identity) as GameObject).GetComponent<OutboundPacket>();
         outboutPacket.SetEndPosition(json.x, json.y, json.z);
+        outboutPacket.SetCountryCode(json.countryCode);
     }
 }
 
@@ -49,4 +51,5 @@ class NativeCodeJson {
     public string srcAddr;
     public string dstAddr;
     public string protocol;
+    public string countryCode;
 }

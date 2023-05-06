@@ -25,6 +25,7 @@ public class Geolocation {
     private static final String TAG = "Geolocation";
     private Activity mActivity;
     private final Context mContext;
+    private Reader mCountryReader;
     private DatabaseReader mCityReader;
 
     public Geolocation(Activity activity) {
@@ -35,6 +36,7 @@ public class Geolocation {
     @Override
     public void finalize() {
         Utils.safeClose(mCityReader);
+        Utils.safeClose(mCountryReader);
         mCityReader = null;
     }
 
@@ -52,6 +54,7 @@ public class Geolocation {
 
     private void openDb() {
         try {
+            mCountryReader = new Reader(getCityFile(mContext));
             mCityReader = new DatabaseReader.Builder(getCityFile(mContext)).build();
             Log.d(TAG, "City DB loaded: " + mCityReader.getMetadata());
 
@@ -136,6 +139,23 @@ public class Geolocation {
         }
 
         // fallback
+        return null;
+    }
+
+    public String getCountryCode(String ip) {
+        if(mCountryReader != null) {
+            try {
+                InetAddress ipAddress = InetAddress.getByName(ip);
+                Geomodel.CountryResult res = mCountryReader.get(ipAddress, Geomodel.CountryResult.class);
+
+                if ((res != null) && (res.getCountry() != null))
+                    return res.getCountry().getIsoCode();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         return null;
     }
 
