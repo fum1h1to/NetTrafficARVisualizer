@@ -6,6 +6,7 @@ public class OutboundPacket : MonoBehaviour
 {
     private float packetAnimationTime = 8f;
     private float packetAnimationAfterTime = 6f;
+    private Renderer _Renderer;
     private Vector3 endPosition;
     private Vector3 position;
     private Vector3 diffScale;
@@ -13,15 +14,20 @@ public class OutboundPacket : MonoBehaviour
     private Camera arCamera;
     private bool isFlagSet = false;
     private GameObject countryFlag;
+    private float arrowVisibleDelay;
+    private bool isArrowVisible = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        _Renderer = GetComponent<Renderer>();
         GameObject mainCamObj = GameObject.Find("AR Camera");
         arCamera = mainCamObj.GetComponent<Camera>();
 
         position = transform.position;
         diffScale = transform.localScale / packetAnimationAfterTime;
+
+        arrowVisibleDelay = packetAnimationTime * 0.2f;
     }
 
     // Update is called once per frame
@@ -50,6 +56,18 @@ public class OutboundPacket : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
+
+        if (arrowVisibleDelay >= 0f) {
+            arrowVisibleDelay -= Time.deltaTime;
+        } else {
+            if (!isArrowVisible) {
+                GameObject MainUI = GameObject.Find("MainUI");
+                if(!this.IsVisible()) {
+                    MainUI.GetComponent<UIManager>().VisibleArrow(this.transform.position);
+                }
+                isArrowVisible = true;
+            }
+        }
     }
 
     public void SetEndPosition(float x, float y, float z) {
@@ -57,13 +75,13 @@ public class OutboundPacket : MonoBehaviour
     }
 
     public void SetCountryCode(string countryCode) {
-        Debug.Log("countryCode: " + countryCode);
-        GameObject countryFlag = new GameObject("CountryFlag");
+        countryFlag = new GameObject("CountryFlag");
         SpriteRenderer countryFlagSprite = countryFlag.AddComponent<SpriteRenderer>();
         
         Texture2D image_texture = Resources.Load<Texture2D>("Images/CountryCode/" + countryCode);
         Sprite image = Sprite.Create(image_texture, new Rect(0, 0, image_texture.width, image_texture.height), Vector2.zero);
         if (image != null) {
+            isFlagSet = true;
             countryFlagSprite.sprite = image;
         } else {
             return;
@@ -74,5 +92,9 @@ public class OutboundPacket : MonoBehaviour
         countryFlag.transform.localPosition = new Vector3(- width / 2 * 1.5f, .5f, 0);
         countryFlag.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 
+    }
+
+    public bool IsVisible() {
+        return _Renderer.isVisible;
     }
 }
