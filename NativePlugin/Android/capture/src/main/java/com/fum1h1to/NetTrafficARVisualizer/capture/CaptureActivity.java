@@ -86,7 +86,6 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
 
     void setCaptureRunning(boolean running) {
         mCaptureRunning = running;
-        Log.d(TAG, running ? "Stop Capture" : "Start Capture");
     }
 
 
@@ -134,7 +133,7 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     public void startCapture() {
         Log.d(TAG, "start capture");
 
-        Intent vpnIntent = VpnService.prepare(this);
+        Intent vpnIntent = LocalVPNService.prepare(this);
 
         if (vpnIntent != null)
             startActivityForResult(vpnIntent, START_CAPTURE_CODE);
