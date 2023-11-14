@@ -10,8 +10,10 @@ import com.fum1h1to.NetTrafficARVisualizer.capture.Geoip.GeoipSettings;
 import com.fum1h1to.NetTrafficARVisualizer.capture.Geoip.Geolocation;
 import com.fum1h1to.NetTrafficARVisualizer.capture.Manager.LocalLocationManager;
 import com.fum1h1to.NetTrafficARVisualizer.capture.Manager.LocalSensorManager;
+import com.fum1h1to.NetTrafficARVisualizer.capture.config.Config;
 import com.unity3d.player.UnityPlayer;
 
+import java.net.InetAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -39,11 +41,12 @@ public class PacketCreater {
     }
 
     public void createPacket(String srcAddr, String dstAddr, String protocol, int length) {
+
         if(mLocalSensorManager.getDeviceBearing() == 361) {
             return;
         }
 
-        if (srcAddr.equals("10.215.173.1")) {
+        if (srcAddr.equals(Config.VPN_ADDRESS)) {
             // outboundの時
             Coordinate dstLatLng = mGeolocation.getLatLng(dstAddr);
             if (dstLatLng == null) {
