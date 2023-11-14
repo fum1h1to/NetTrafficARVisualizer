@@ -126,7 +126,6 @@ public class NioSingleThreadTcpHandler implements Runnable {
         if ((flag & (byte) TCPHeader.ACK) != 0) {
             pipe.mySequenceNum += dataLen;
         }
-        Log.i(TAG, "send: " + packet.toString());
     }
 
     private void handleSyn(Packet packet, TcpPipe pipe) {
@@ -455,12 +454,14 @@ public class NioSingleThreadTcpHandler implements Runnable {
     public void run() {
         try {
             selector = Selector.open();
-            while (true) {
+            while (!Thread.interrupted()) {
                 handleReadFromVpn();
                 handleSockets();
                 tick += 1;
                 Thread.sleep(1);
             }
+        } catch(InterruptedException e){
+            Log.i(TAG, "NioSingleThreadTcpHandler finish");
         } catch (Exception e) {
             Log.e(e.getMessage(), "", e);
         }

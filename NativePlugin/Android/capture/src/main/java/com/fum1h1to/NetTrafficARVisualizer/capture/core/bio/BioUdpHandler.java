@@ -159,7 +159,7 @@ public class BioUdpHandler implements Runnable {
             t.start();
 
 
-            while (true) {
+            while (!Thread.interrupted()) {
                 Packet packet = queue.take();
 
                 InetAddress destinationAddress = packet.ip4Header.destinationAddress;
@@ -205,6 +205,8 @@ public class BioUdpHandler implements Runnable {
                     udpSockets.remove(ipAndPort);
                 }
             }
+        } catch(InterruptedException e){
+            Log.i(TAG, "BioUdpHandler finish");
         } catch (Exception e) {
             Log.e(TAG, "error", e);
             System.exit(0);

@@ -29,8 +29,7 @@ import java.util.concurrent.Executors;
 
 public class LocalVPNService extends VpnService {
     private static final String TAG = LocalVPNService.class.getSimpleName();
-    private static final String VPN_ADDRESS = "10.0.0.2"; // Only IPv4 support for now
-    private static final String VPN_ROUTE = "0.0.0.0"; // Intercept everything
+    private static LocalVPNService INSTANCE;
 
     private ParcelFileDescriptor vpnInterface = null;
 
@@ -44,6 +43,7 @@ public class LocalVPNService extends VpnService {
     @Override
     public void onCreate() {
         super.onCreate();
+
         setupVPN();
         deviceToNetworkUDPQueue = new ArrayBlockingQueue<Packet>(1000);
         deviceToNetworkTCPQueue = new ArrayBlockingQueue<Packet>(1000);
@@ -57,6 +57,7 @@ public class LocalVPNService extends VpnService {
         executorService.submit(new VPNRunnable(vpnInterface.getFileDescriptor(),
                 deviceToNetworkUDPQueue, deviceToNetworkTCPQueue, networkToDeviceQueue));
 
+        INSTANCE = this;
         Log.i(TAG, "Started");
     }
 
@@ -64,8 +65,8 @@ public class LocalVPNService extends VpnService {
         try {
             if (vpnInterface == null) {
                 Builder builder = new Builder();
-                builder.addAddress(VPN_ADDRESS, 32);
-                builder.addRoute(VPN_ROUTE, 0);
+                builder.addAddress(Config.VPN_ADDRESS, 32);
+                builder.addRoute(Config.VPN_ROUTE, 0);
                 builder.addDnsServer(Config.dns);
                 vpnInterface = builder.setSession("NetTrafficARVisualizer").setConfigureIntent(pendingIntent).establish();
             }
@@ -75,18 +76,33 @@ public class LocalVPNService extends VpnService {
         }
     }
 
+    public static void stopService() {
+        LocalVPNService lvs = INSTANCE;
+        lvs.stopSelf();
+        lvs.stopVPN();
+    }
+
+    private void stopVPN() {
+        executorService.shutdownNow();
+        cleanup();
+        Log.i(TAG, "Stopped");
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return START_STICKY;
     }
 
+    @Override
+    public void onRevoke() {
+        stopVPN();
+        super.onRevoke();
+    }
 
     @Override
     public void onDestroy() {
+        stopVPN();
         super.onDestroy();
-        executorService.shutdownNow();
-        cleanup();
-        Log.i(TAG, "Stopped");
     }
 
     private void cleanup() {
@@ -151,6 +167,10 @@ public class LocalVPNService extends VpnService {
                                 Log.d(TAG, "vpn write " + w);
                             }
                         }
+
+                        bufferFromNetwork.rewind();
+                        Packet packet = new Packet(bufferFromNetwork);
+                        CaptureQueue.queue.offer(packet);
                     } catch (Exception e) {
                         Log.i(TAG, "WriteVpnThread fail", e);
                     }
@@ -178,7 +198,6 @@ public class LocalVPNService extends VpnService {
                         bufferToNetwork.flip();
 
                         Packet packet = new Packet(bufferToNetwork);
-                        Log.i(TAG, "vpn: " + packet.toString());
                         if (packet.isUDP()) {
                             if (Config.logRW) {
                                 Log.i(TAG, "read udp" + readBytes);
@@ -193,8 +212,7 @@ public class LocalVPNService extends VpnService {
                             Log.w(TAG, String.format("Unknown packet protocol type %d", packet.ip4Header.protocolNum));
                         }
 
-//                        Buffer buffer = bufferToNetwork.rewind();
-
+                        CaptureQueue.queue.offer(packet);
 
                     } else {
                         try {

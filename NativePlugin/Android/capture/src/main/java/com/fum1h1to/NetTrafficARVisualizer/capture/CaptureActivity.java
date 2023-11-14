@@ -6,10 +6,11 @@ import android.net.VpnService;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.fum1h1to.NetTrafficARVisualizer.capture.core.CaptureQueue;
 import com.fum1h1to.NetTrafficARVisualizer.capture.core.LocalVPNService;
+import com.fum1h1to.NetTrafficARVisualizer.capture.core.protocol.tcpip.Packet;
 
-import org.pcap4j.packet.IpV4Packet;
-
+import java.nio.ByteBuffer;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -20,6 +21,7 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     static final int STOP_CAPTURE_CODE = 1001;
     static final int STATUS_CAPTURE_CODE = 1002;
     PacketCreater mPacketCreater;
+    Thread mCaptureThread;
     boolean mCaptureRunning = false;
 
     @Override
@@ -74,16 +76,6 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
         super.onSaveInstanceState(bundle);
     }
 
-    void onPacketReceived(IpV4Packet pkt) {
-        IpV4Packet.IpV4Header hdr = pkt.getHeader();
-        Log.i(TAG, String.format("[%s] %s -> %s [%d B]\n",
-                hdr.getProtocol(),
-                hdr.getSrcAddr().getHostAddress(), hdr.getDstAddr().getHostAddress(),
-                pkt.length()));
-
-        mPacketCreater.createPacket(hdr.getSrcAddr().getHostAddress(), hdr.getDstAddr().getHostAddress(), String.valueOf(hdr.getProtocol()), pkt.length());
-    }
-
     void setCaptureRunning(boolean running) {
         mCaptureRunning = running;
     }
@@ -99,6 +91,8 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
                 if (resultCode == RESULT_OK) {
                     setCaptureRunning(true);
                     startService(new Intent(this, LocalVPNService.class));
+                    mCaptureThread = new Thread(new CaptureThread());
+                    mCaptureThread.start();
                 } else {
 
                 }
@@ -107,13 +101,42 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
                 Log.d(TAG, "capture stop result: " + resultCode);
                 if (resultCode == RESULT_OK) {
                     setCaptureRunning(false);
-                    stopService(new Intent(this, LocalVPNService.class));
+                    if (mCaptureThread != null) {
+                        mCaptureThread.interrupt();
+                    }
+                    LocalVPNService.stopService();
+
                 } else {
 
                 }
                 break;
             default:
                 break;
+        }
+    }
+
+    private class CaptureThread implements Runnable {
+        private static final String TAG = "CaptureThread";
+
+        @Override
+        public void run() {
+            try {
+                while(!Thread.interrupted()) {
+                    Packet packet = CaptureQueue.queue.take();
+
+                    Log.i(TAG, String.format("[%s] %s -> %s [%d B]\n",
+                            packet.ip4Header.protocol,
+                            packet.ip4Header.sourceAddress.getHostAddress(), packet.ip4Header.destinationAddress.getHostAddress(),
+                            packet.ip4Header.totalLength));
+
+                    mPacketCreater.createPacket(packet.ip4Header.sourceAddress.getHostAddress(), packet.ip4Header.destinationAddress.getHostAddress(), packet.ip4Header.protocol.toString(), packet.ip4Header.totalLength);
+                }
+
+            } catch(InterruptedException e){
+                Log.i(TAG, "CaptureThread finish");
+            } catch (Exception e) {
+                Log.i(TAG, "capture fail", e);
+            }
         }
     }
 
