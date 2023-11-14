@@ -19,6 +19,7 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -66,10 +67,7 @@ public class LocalVPNService extends VpnService {
                 builder.addAddress(VPN_ADDRESS, 32);
                 builder.addRoute(VPN_ROUTE, 0);
                 builder.addDnsServer(Config.dns);
-                if (Config.testLocal) {
-                    builder.addAllowedApplication("com.mocyx.basic_client");
-                }
-                vpnInterface = builder.setSession(getString(R.string.app_name)).setConfigureIntent(pendingIntent).establish();
+                vpnInterface = builder.setSession("NetTrafficARVisualizer").setConfigureIntent(pendingIntent).establish();
             }
         } catch (Exception e) {
             Log.e(TAG, "error", e);
@@ -147,7 +145,7 @@ public class LocalVPNService extends VpnService {
                         while (bufferFromNetwork.hasRemaining()) {
                             int w = vpnOutput.write(bufferFromNetwork);
                             if (w > 0) {
-                                MainActivity.downByte.addAndGet(w);
+//                                MainActivity.downByte.addAndGet(w);
                             }
                             if (Config.logRW) {
                                 Log.d(TAG, "vpn write " + w);
@@ -174,7 +172,7 @@ public class LocalVPNService extends VpnService {
                     bufferToNetwork = ByteBufferPool.acquire();
                     int readBytes = vpnInput.read(bufferToNetwork);
 
-                    MainActivity.upByte.addAndGet(readBytes);
+//                    MainActivity.upByte.addAndGet(readBytes);
 
                     if (readBytes > 0) {
                         bufferToNetwork.flip();
@@ -194,6 +192,10 @@ public class LocalVPNService extends VpnService {
                         } else {
                             Log.w(TAG, String.format("Unknown packet protocol type %d", packet.ip4Header.protocolNum));
                         }
+
+//                        Buffer buffer = bufferToNetwork.rewind();
+
+
                     } else {
                         try {
                             Thread.sleep(10);
