@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.ARFoundation;
 
 public class InboundPacket : MonoBehaviour
 {
@@ -9,22 +10,23 @@ public class InboundPacket : MonoBehaviour
     private Renderer _Renderer;
     private Vector3 position;
     private Vector3 velocity;
-    private Camera arCamera;
+    private ARCameraManager arCamera;
     private bool isFlagSet = false;
     private GameObject countryFlag;
 
+    public bool IsVisible =>  _Renderer.isVisible;
+    
     // Start is called before the first frame update
     void Start()
     {
         _Renderer = GetComponent<Renderer>();
-        GameObject mainCamObj = GameObject.Find("AR Camera");
-        arCamera = mainCamObj.GetComponent<Camera>();
+        arCamera = FindObjectOfType<ARCameraManager>();
 
         position = transform.position;
 
-        GameObject MainUI = GameObject.Find("MainUI");
-        if(!this.IsVisible()) {
-            MainUI.GetComponent<UIManager>().VisibleArrow(this.transform.position);
+        var mainUI = FindObjectOfType<UIManager>();
+        if(!this.IsVisible) {
+            mainUI.VisibleArrow(this.transform.position);
         }
     }
 
@@ -76,7 +78,4 @@ public class InboundPacket : MonoBehaviour
 
     }
 
-    public bool IsVisible() {
-        return _Renderer.isVisible;
-    }
 }

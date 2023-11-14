@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.ARFoundation;
 
 public class OutboundPacket : MonoBehaviour
 {
@@ -11,18 +12,19 @@ public class OutboundPacket : MonoBehaviour
     private Vector3 position;
     private Vector3 diffScale;
     private Vector3 velocity;
-    private Camera arCamera;
+    private ARCameraManager arCamera;
     private bool isFlagSet = false;
     private GameObject countryFlag;
     private float arrowVisibleDelay;
     private bool isArrowVisible = false;
-
+    
+    public bool IsVisible =>  _Renderer.isVisible;
+    
     // Start is called before the first frame update
     void Start()
     {
         _Renderer = GetComponent<Renderer>();
-        GameObject mainCamObj = GameObject.Find("AR Camera");
-        arCamera = mainCamObj.GetComponent<Camera>();
+        arCamera = FindObjectOfType<ARCameraManager>();
 
         position = transform.position;
         diffScale = transform.localScale / packetAnimationAfterTime;
@@ -61,8 +63,8 @@ public class OutboundPacket : MonoBehaviour
             arrowVisibleDelay -= Time.deltaTime;
         } else {
             if (!isArrowVisible) {
-                GameObject MainUI = GameObject.Find("MainUI");
-                if(!this.IsVisible()) {
+                var MainUI = FindObjectOfType<UIManager>();
+                if(!this.IsVisible) {
                     MainUI.GetComponent<UIManager>().VisibleArrow(this.transform.position);
                 }
                 isArrowVisible = true;
@@ -92,9 +94,5 @@ public class OutboundPacket : MonoBehaviour
         countryFlag.transform.localPosition = new Vector3(- width / 2 * 1.5f, .5f, 0);
         countryFlag.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 
-    }
-
-    public bool IsVisible() {
-        return _Renderer.isVisible;
     }
 }
