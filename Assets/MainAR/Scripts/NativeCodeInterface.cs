@@ -45,9 +45,8 @@ public class NativeCodeInterface : MonoBehaviour
 }
 
 class NativeCodeJson {
-    public float x;
-    public float y;
-    public float z;
+    public float lat;
+    public float lng;
     public string srcAddr;
     public string dstAddr;
     public string protocol;

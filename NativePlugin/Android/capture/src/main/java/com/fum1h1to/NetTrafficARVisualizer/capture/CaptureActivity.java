@@ -54,8 +54,6 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     @Override
     protected void onResume() {
         super.onResume();
-
-        mPacketCreater.getLocalLocationManager().updateNowLocation();
     }
 
     @Override
@@ -129,7 +127,7 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
                             packet.ip4Header.sourceAddress.getHostAddress(), packet.ip4Header.destinationAddress.getHostAddress(),
                             packet.ip4Header.totalLength));
 
-                    mPacketCreater.createPacket(packet.ip4Header.sourceAddress.getHostAddress(), packet.ip4Header.destinationAddress.getHostAddress(), packet.ip4Header.protocol.toString(), packet.ip4Header.totalLength);
+//                    mPacketCreater.createPacket(packet.ip4Header.sourceAddress.getHostAddress(), packet.ip4Header.destinationAddress.getHostAddress(), packet.ip4Header.protocol.toString(), packet.ip4Header.totalLength);
                 }
 
             } catch(InterruptedException e){
