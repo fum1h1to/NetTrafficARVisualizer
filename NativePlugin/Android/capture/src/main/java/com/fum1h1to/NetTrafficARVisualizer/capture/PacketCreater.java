@@ -52,9 +52,9 @@ public class PacketCreater {
                     "\"countryCode\": \"" + countryCode + "\"" +
                     "}";
 
-            UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateOutboundPacketObject", message);
+//            UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateOutboundPacket", message);
 
-        } else {
+        } else if (dstAddr.equals(Config.VPN_ADDRESS)) {
             // inboundの時
             Coordinate srcLatLng = mGeolocation.getLatLng(srcAddr);
             if (srcLatLng == null) {
@@ -72,7 +72,7 @@ public class PacketCreater {
                     "\"countryCode\": \"" + countryCode + "\"" +
                     "}";
 
-            UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateInboundPacketObject", message);
+            UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateInboundPacket", message);
         }
 
     }
