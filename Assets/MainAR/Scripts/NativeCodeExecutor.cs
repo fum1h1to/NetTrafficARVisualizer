@@ -4,22 +4,14 @@ using UnityEngine;
 using UnityEngine.Android;
 using VContainer;
 using MainAR.Scripts.Packet;
-
+ 
 namespace MainAR.Scripts
 {
-    public class NativeCodeInterface : MonoBehaviour
+    public class NativeCodeExecutor : MonoBehaviour
     {
-        private AndroidJavaObject mActivity;
         private PacketFactory packetFactory;
 
         void Start() {
-            AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-
-            mActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-        }
-
-        public void OnClick() {
-            mActivity.Call("test");
         }
 
         public void CreateInboundPacket(string message) {
@@ -38,6 +30,7 @@ namespace MainAR.Scripts
 
         [Inject]
         public void Construct(PacketFactory packetFactory) {
+          Debug.Log("NativeCodeExecutor Construct");  
             this.packetFactory = packetFactory;
         }
         
