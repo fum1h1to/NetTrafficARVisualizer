@@ -42,7 +42,7 @@ namespace MainAR.Scripts
         case ARSessionState.SessionTracking:
           Debug.Log("ARSessionState.SessionTracking");
           _compassState.UpdateCompassHeading();
-          _sessionOrigin.transform.localRotation = Quaternion.Euler(0, -_compassState.GetCompassHeading(), 0);
+          _sessionOrigin.transform.localRotation = Quaternion.Euler(0, _compassState.GetCompassHeading(), 0);
           break;
       }
     }

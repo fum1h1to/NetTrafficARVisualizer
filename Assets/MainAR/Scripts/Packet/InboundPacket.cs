@@ -49,7 +49,7 @@ namespace MainAR.Scripts.Packet
 
 					GeoCoordinate targetCoordinate = new GeoCoordinate(targetLatitude, targetLongitude);
 
-					float heading = compassState.GetCompassHeading();
+					float heading = 0;
 					Debug.Log("info: lat:" + targetLatitude + ", lng:" + targetLongitude);
 
 					transform.position = GeoUtil.ConvertCoordinate(currentCoordinate, targetCoordinate, heading, 5);
