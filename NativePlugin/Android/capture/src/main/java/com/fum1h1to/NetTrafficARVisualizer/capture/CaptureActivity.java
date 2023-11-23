@@ -1,17 +1,15 @@
 package com.fum1h1to.NetTrafficARVisualizer.capture;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.net.VpnService;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.fum1h1to.NetTrafficARVisualizer.capture.Packet.PacketService;
 import com.fum1h1to.NetTrafficARVisualizer.capture.config.Config;
-import com.fum1h1to.NetTrafficARVisualizer.capture.core.CaptureQueue;
+import com.fum1h1to.NetTrafficARVisualizer.capture.core.PacketRawDataQueue;
 import com.fum1h1to.NetTrafficARVisualizer.capture.core.LocalVPNService;
 import com.fum1h1to.NetTrafficARVisualizer.capture.core.protocol.tcpip.Packet;
 
-import java.nio.ByteBuffer;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -21,7 +19,7 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     static final int START_CAPTURE_CODE = 1000;
     static final int STOP_CAPTURE_CODE = 1001;
     static final int STATUS_CAPTURE_CODE = 1002;
-    PacketCreater mPacketCreater;
+    PacketService mPacketService;
     Thread mCaptureThread;
     boolean mCaptureRunning = false;
 
@@ -32,8 +30,7 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
         if((savedInstanceState != null) && savedInstanceState.containsKey("capture_running"))
             setCaptureRunning(savedInstanceState.getBoolean("capture_running"));
 
-        mPacketCreater = new PacketCreater(this);
-        mPacketCreater.init();
+        mPacketService = new PacketService(this);
     }
 
     @Override
@@ -90,8 +87,7 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
                 if (resultCode == RESULT_OK) {
                     setCaptureRunning(true);
                     startService(new Intent(this, LocalVPNService.class));
-                    mCaptureThread = new Thread(new CaptureThread());
-                    mCaptureThread.start();
+                    mPacketService.packetConvertStart();
                 } else {
 
                 }
@@ -100,9 +96,7 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
                 Log.d(TAG, "capture stop result: " + resultCode);
                 if (resultCode == RESULT_OK) {
                     setCaptureRunning(false);
-                    if (mCaptureThread != null) {
-                        mCaptureThread.interrupt();
-                    }
+                    mPacketService.packetConvertStop();
                     LocalVPNService.stopService();
 
                 } else {
@@ -111,31 +105,6 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
                 break;
             default:
                 break;
-        }
-    }
-
-    private class CaptureThread implements Runnable {
-        private static final String TAG = "CaptureThread";
-
-        @Override
-        public void run() {
-            try {
-                while(!Thread.interrupted()) {
-                    Packet packet = CaptureQueue.queue.take();
-
-                    Log.i(TAG, String.format("[%s] %s -> %s [%d B]\n",
-                            packet.ip4Header.protocol,
-                            packet.ip4Header.sourceAddress.getHostAddress(), packet.ip4Header.destinationAddress.getHostAddress(),
-                            packet.ip4Header.totalLength));
-
-                   mPacketCreater.createPacket(packet.ip4Header.sourceAddress.getHostAddress(), packet.ip4Header.destinationAddress.getHostAddress(), packet.ip4Header.protocol.toString(), packet.ip4Header.totalLength);
-                }
-
-            } catch(InterruptedException e){
-                Log.i(TAG, "CaptureThread finish");
-            } catch (Exception e) {
-                Log.i(TAG, "capture fail", e);
-            }
         }
     }
 
@@ -148,8 +117,8 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     }
 
     public void test() {
-        mPacketCreater.createPacket("8.8.8.8", Config.VPN_ADDRESS, "TCP", 1);
-        mPacketCreater.createPacket(Config.VPN_ADDRESS,"8.8.8.8", "TCP", 1);
+//        mPacketCreater.createPacket("8.8.8.8", Config.VPN_ADDRESS, "TCP", 1);
+//        mPacketCreater.createPacket(Config.VPN_ADDRESS,"8.8.8.8", "TCP", 1);
     }
 
     public void startCapture() {
