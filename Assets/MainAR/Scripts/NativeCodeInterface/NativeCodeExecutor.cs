@@ -16,7 +16,6 @@ namespace MainAR.Scripts.NativeCodeInterface
 
         public void CreateInboundPacket(string message) {
             PacketNativeInterfaceModel json = JsonUtility.FromJson<PacketNativeInterfaceModel>(message);
-            Debug.Log("CreateInboundPacketCount: " + json.count);
             if (packetFactory != null) {
                 packetFactory.CreateInboundPacket(json);
             }
