@@ -31,6 +31,7 @@ namespace MainAR.Scripts.Packet
         GameObject obj= Instantiate(outboundPacketObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
         obj.SetActive(false);
         OutboundPacket outboundPacket = obj.GetComponent<OutboundPacket>();
+			  outboundPacket.SetPacketScale(packetObj.count);
         outboundPacket.SetArCamera(arCamera);
         outboundPacket.SetUIController(uiController);
         outboundPacket.SetStartPosition();
@@ -43,6 +44,10 @@ namespace MainAR.Scripts.Packet
 
       private void SetStartPosition() {
         transform.position = arCamera.transform.position - new Vector3(0, 0.1f, 0);
+      }
+
+      private void SetPacketScale(int packetSize) {
+        transform.localScale = transform.localScale * (packetSize / 10f);
       }
  
       public void SetEndPosition(float targetLatitude, float targetLongitude) {

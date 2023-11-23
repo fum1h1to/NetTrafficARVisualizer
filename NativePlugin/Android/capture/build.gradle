@@ -49,8 +49,7 @@ dependencies {
     compileOnly fileTree(dir: 'libs', include: ['unity-classes.jar'])
 
     implementation 'com.google.android.material:material:1.8.0'
-    implementation 'org.pcap4j:pcap4j-core:1.8.2'
-    implementation 'org.pcap4j:pcap4j-packetfactory-static:1.8.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
     implementation 'com.maxmind.geoip2:geoip2:4.0.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

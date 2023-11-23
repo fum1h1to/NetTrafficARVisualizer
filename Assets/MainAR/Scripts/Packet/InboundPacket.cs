@@ -26,14 +26,15 @@ namespace MainAR.Scripts.Packet
 		public static InboundPacket Create(GameObject inboundPacketObject, PacketNativeInterfaceModel packetObj, UIController uiController, Camera arCamera) {
 			GameObject obj= Instantiate(inboundPacketObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 			obj.SetActive(false);
-			InboundPacket inboutPacket = obj.GetComponent<InboundPacket>();
-			inboutPacket.SetUIController(uiController);
-			inboutPacket.SetArCamera(arCamera);
-			inboutPacket.SetStartPosition(packetObj.lat, packetObj.lng);
-			inboutPacket.SetCountryCode(packetObj.countryCode);
+			InboundPacket inboundPacket = obj.GetComponent<InboundPacket>();
+			inboundPacket.SetPacketScale(packetObj.count);
+			inboundPacket.SetUIController(uiController);
+			inboundPacket.SetArCamera(arCamera);
+			inboundPacket.SetStartPosition(packetObj.lat, packetObj.lng);
+			inboundPacket.SetCountryCode(packetObj.countryCode);
 
 			obj.SetActive(true);
-			return inboutPacket;
+			return inboundPacket;
 		}
 
 		private void SetStartPosition(float targetLatitude, float targetLongitude) {
@@ -51,6 +52,10 @@ namespace MainAR.Scripts.Packet
 					transform.position = GeoUtil.ConvertCoordinate(currentCoordinate, targetCoordinate, heading, 5);
 				}
 			}
+		}
+
+		private void SetPacketScale(int packetSize) {
+			transform.localScale = transform.localScale * (packetSize / 10f);
 		}
 		
 		// Start is called before the first frame update

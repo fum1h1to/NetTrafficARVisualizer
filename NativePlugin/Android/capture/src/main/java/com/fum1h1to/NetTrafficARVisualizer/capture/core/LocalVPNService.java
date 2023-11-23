@@ -7,7 +7,6 @@ import android.net.VpnService;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
-import com.fum1h1to.NetTrafficARVisualizer.capture.core.bio.BioTcpHandler;
 import com.fum1h1to.NetTrafficARVisualizer.capture.core.bio.BioUdpHandler;
 import com.fum1h1to.NetTrafficARVisualizer.capture.core.bio.NioSingleThreadTcpHandler;
 import com.fum1h1to.NetTrafficARVisualizer.capture.config.Config;
@@ -19,7 +18,6 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -95,12 +93,14 @@ public class LocalVPNService extends VpnService {
 
     @Override
     public void onRevoke() {
+        stopSelf();
         stopVPN();
         super.onRevoke();
     }
 
     @Override
     public void onDestroy() {
+        stopSelf();
         stopVPN();
         super.onDestroy();
     }
@@ -170,7 +170,7 @@ public class LocalVPNService extends VpnService {
 
                         bufferFromNetwork.rewind();
                         Packet packet = new Packet(bufferFromNetwork);
-                        CaptureQueue.queue.offer(packet);
+                        PacketRawDataQueue.queue.offer(packet);
                     } catch (Exception e) {
                         Log.i(TAG, "WriteVpnThread fail", e);
                     }
@@ -212,7 +212,7 @@ public class LocalVPNService extends VpnService {
                             Log.w(TAG, String.format("Unknown packet protocol type %d", packet.ip4Header.protocolNum));
                         }
 
-                        CaptureQueue.queue.offer(packet);
+                        PacketRawDataQueue.queue.offer(packet);
 
                     } else {
                         try {
