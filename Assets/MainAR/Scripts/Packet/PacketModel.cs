@@ -7,6 +7,7 @@ namespace MainAR.Scripts.Packet
     public float lng;
     public string srcAddr;
     public string dstAddr;
+    public string count;
     public string protocol;
     public string countryCode;
   }

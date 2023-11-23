@@ -13,7 +13,7 @@ public class PacketSender implements Runnable {
     private BlockingQueue<PacketModel> nativeToUnityQueue;
 
     public PacketSender(BlockingQueue<PacketModel> nativeToUnityQueue) {
-        nativeToUnityQueue = nativeToUnityQueue;
+        this.nativeToUnityQueue = nativeToUnityQueue;
     }
 
     @Override
@@ -22,9 +22,9 @@ public class PacketSender implements Runnable {
             PacketModel packetModel = nativeToUnityQueue.take();
 
             if (packetModel.getTrafficType() == PacketModel.TrafficType.INBOUND) {
-//                UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateOutboundPacket", message);
+                UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateOutboundPacket", packetModel.toJsonText());
             } else if (packetModel.getTrafficType() == PacketModel.TrafficType.OUTBOUND) {
-//                UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateOutboundPacket", message);
+                UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateOutboundPacket", packetModel.toJsonText());
             }
 
         } catch(InterruptedException e) {

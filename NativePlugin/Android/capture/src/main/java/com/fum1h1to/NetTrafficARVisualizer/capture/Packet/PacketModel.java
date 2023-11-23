@@ -2,16 +2,26 @@ package com.fum1h1to.NetTrafficARVisualizer.capture.Packet;
 
 import java.net.InetAddress;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fum1h1to.NetTrafficARVisualizer.capture.core.protocol.tcpip.Packet;
 
 public class PacketModel {
     private TrafficType trafficType;
+    @JsonProperty("lat")
     private Double lat;
+    @JsonProperty("lng")
     private Double lng;
+    @JsonProperty("srcAddr")
     private InetAddress srcAddr;
+    @JsonProperty("dstAddr")
     private InetAddress dstAddr;
+    @JsonProperty("count")
     private int count;
+    @JsonProperty("protocol")
     private Packet.IP4Header.TransportProtocol protocol;
+    @JsonProperty("countryCode")
     private String countryCode;
 
     public PacketModel() {}
@@ -39,6 +49,17 @@ public class PacketModel {
     public enum TrafficType {
         INBOUND,
         OUTBOUND;
+    }
+
+    public String toJsonText() {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String jsonData = mapper.writeValueAsString(this);
+            return jsonData;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     public TrafficType getTrafficType() {
