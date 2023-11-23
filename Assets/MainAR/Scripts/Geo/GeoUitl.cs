@@ -8,7 +8,6 @@ namespace MainAR.Scripts.Geo {
     {
         double altitude = 1;
         double bearing = CalculateBearing(currentCoordinate, targetCoordinate);
-        Debug.Log("info: bearing:" + bearing + ", currentHeading:" + currentHeading);
 
         // tan(90)
         if (Mathf.Approximately(currentHeading, (float)bearing))

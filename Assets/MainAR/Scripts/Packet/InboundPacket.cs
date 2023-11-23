@@ -5,7 +5,6 @@ using UnityEngine.XR.ARFoundation;
 using System.Device.Location;
 using MainAR.Scripts;
 using MainAR.Scripts.Geo;
-using MainAR.Scripts.Compass;
 using MainAR.Scripts.View;
 
 namespace MainAR.Scripts.Packet
@@ -18,19 +17,17 @@ namespace MainAR.Scripts.Packet
 		private Vector3 position;
 		private Vector3 velocity;
 		private Camera arCamera;
-		private CompassState compassState;
 		private UIController uiController;
 		private bool isFlagSet = false;
 		private GameObject countryFlag;
 
 		public bool IsVisible =>  _Renderer.isVisible;
 
-		public static InboundPacket Create(GameObject inboundPacketObject, PacketNativeInterfaceModel packetObj, UIController uiController, Camera arCamera, CompassState compassState) {
+		public static InboundPacket Create(GameObject inboundPacketObject, PacketNativeInterfaceModel packetObj, UIController uiController, Camera arCamera) {
 			GameObject obj= Instantiate(inboundPacketObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 			obj.SetActive(false);
 			InboundPacket inboutPacket = obj.GetComponent<InboundPacket>();
 			inboutPacket.SetUIController(uiController);
-			inboutPacket.SetCompassState(compassState);
 			inboutPacket.SetArCamera(arCamera);
 			inboutPacket.SetStartPosition(packetObj.lat, packetObj.lng);
 			inboutPacket.SetCountryCode(packetObj.countryCode);
@@ -50,7 +47,6 @@ namespace MainAR.Scripts.Packet
 					GeoCoordinate targetCoordinate = new GeoCoordinate(targetLatitude, targetLongitude);
 
 					float heading = 0;
-					Debug.Log("info: lat:" + targetLatitude + ", lng:" + targetLongitude);
 
 					transform.position = GeoUtil.ConvertCoordinate(currentCoordinate, targetCoordinate, heading, 5);
 				}
@@ -99,10 +95,6 @@ namespace MainAR.Scripts.Packet
 
 		private void SetArCamera(Camera arCamera) {
 			this.arCamera = arCamera;
-		}
-
-		private void SetCompassState(CompassState compassState) {
-			this.compassState = compassState;
 		}
 
 		private void SetUIController(UIController uiController) {

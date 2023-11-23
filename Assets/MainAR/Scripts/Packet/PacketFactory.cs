@@ -9,30 +9,27 @@ namespace MainAR.Scripts.Packet
   {
     private PacketPrefabData _packetPrefabData;
     private Camera _arCamera;
-    private CompassState _compassState;
     private UIController _uiController;
 
     public PacketFactory(
       PacketPrefabData packetPrefabData,
       Camera arCamera,
-      CompassState compassState,
       UIController uiController
     ) 
     {
       _packetPrefabData = packetPrefabData;
       _arCamera = arCamera;
-      _compassState = compassState;
       _uiController = uiController;
     }
     
     public void CreateInboundPacket(PacketNativeInterfaceModel packetObj)
     {
-      InboundPacket inboutPacket = InboundPacket.Create(_packetPrefabData.InboundPacketObject, packetObj, _uiController, _arCamera, _compassState);
+      InboundPacket inboutPacket = InboundPacket.Create(_packetPrefabData.InboundPacketObject, packetObj, _uiController, _arCamera);
     }
 
     public void CreateOutboundPacket(PacketNativeInterfaceModel packetObj) 
     {
-      // OutboundPacket outboutPacket = OutboundPacket.Create(_packetPrefabData.OutboundPacketObject, packetObj, _arCamera);
+      OutboundPacket outboutPacket = OutboundPacket.Create(_packetPrefabData.OutboundPacketObject, packetObj, _uiController, _arCamera);
     }
   }
 }

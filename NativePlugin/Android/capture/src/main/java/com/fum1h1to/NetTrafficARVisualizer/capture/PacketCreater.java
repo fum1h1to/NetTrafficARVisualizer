@@ -52,7 +52,7 @@ public class PacketCreater {
                     "\"countryCode\": \"" + countryCode + "\"" +
                     "}";
 
-//            UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateOutboundPacket", message);
+            UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateOutboundPacket", message);
 
         } else if (dstAddr.equals(Config.VPN_ADDRESS)) {
             // inboundの時
