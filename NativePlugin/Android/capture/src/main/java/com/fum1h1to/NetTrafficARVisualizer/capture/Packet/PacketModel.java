@@ -14,6 +14,8 @@ public class PacketModel {
     private Packet.IP4Header.TransportProtocol protocol;
     private String countryCode;
 
+    public PacketModel() {}
+
     public PacketModel(
             TrafficType trafficType,
             Double lat,
