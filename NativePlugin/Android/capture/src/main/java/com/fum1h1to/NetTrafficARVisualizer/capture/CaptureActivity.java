@@ -35,8 +35,8 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         stopCapture();
+        super.onDestroy();
     }
 
     @Override

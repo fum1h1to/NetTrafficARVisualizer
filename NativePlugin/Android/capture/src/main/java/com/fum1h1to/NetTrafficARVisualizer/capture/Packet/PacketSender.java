@@ -19,12 +19,14 @@ public class PacketSender implements Runnable {
     @Override
     public void run() {
         try {
-            PacketModel packetModel = nativeToUnityQueue.take();
+            while(!Thread.interrupted()) {
+                PacketModel packetModel = nativeToUnityQueue.take();
 
-            if (packetModel.getTrafficType() == PacketModel.TrafficType.INBOUND) {
-                UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateOutboundPacket", packetModel.toJsonText());
-            } else if (packetModel.getTrafficType() == PacketModel.TrafficType.OUTBOUND) {
-                UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateOutboundPacket", packetModel.toJsonText());
+                if (packetModel.getTrafficType() == PacketModel.TrafficType.INBOUND) {
+                    UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateInboundPacket", packetModel.toJsonText());
+                } else if (packetModel.getTrafficType() == PacketModel.TrafficType.OUTBOUND) {
+                    UnityPlayer.UnitySendMessage(UNITY_SCRIPT_GAMEOBJECT_NAME, "CreateOutboundPacket", packetModel.toJsonText());
+                }
             }
 
         } catch(InterruptedException e) {

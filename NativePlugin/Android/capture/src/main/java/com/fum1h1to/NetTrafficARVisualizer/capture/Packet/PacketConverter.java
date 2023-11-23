@@ -95,7 +95,6 @@ public class PacketConverter {
             });
 
             // packetModelに変換
-            List<PacketModel> packetModels = new ArrayList<>();
             inboundMap.forEach((k, v) -> {
                 PacketModel packetModel = new PacketModel();
                 String srcip = k.getIp().getHostAddress();

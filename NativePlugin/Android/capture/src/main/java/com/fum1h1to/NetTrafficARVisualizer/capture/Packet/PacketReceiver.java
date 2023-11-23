@@ -27,7 +27,7 @@ public class PacketReceiver implements Runnable {
                 List<Packet> packetRaws = new ArrayList<>();
                 PacketRawDataQueue.queue.drainTo(packetRaws);
 
-                mPacketConverter.submitPacketRaws(packetRaws);
+                if (packetRaws.size() != 0) mPacketConverter.submitPacketRaws(packetRaws);
             }
         };
         timer.scheduleAtFixedRate(task,0,1000);
