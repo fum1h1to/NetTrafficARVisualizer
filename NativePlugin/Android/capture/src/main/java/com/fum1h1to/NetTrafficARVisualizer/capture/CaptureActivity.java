@@ -6,6 +6,7 @@ import android.net.VpnService;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.fum1h1to.NetTrafficARVisualizer.capture.config.Config;
 import com.fum1h1to.NetTrafficARVisualizer.capture.core.CaptureQueue;
 import com.fum1h1to.NetTrafficARVisualizer.capture.core.LocalVPNService;
 import com.fum1h1to.NetTrafficARVisualizer.capture.core.protocol.tcpip.Packet;
@@ -54,8 +55,6 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     @Override
     protected void onResume() {
         super.onResume();
-
-        mPacketCreater.getLocalLocationManager().updateNowLocation();
     }
 
     @Override
@@ -129,7 +128,7 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
                             packet.ip4Header.sourceAddress.getHostAddress(), packet.ip4Header.destinationAddress.getHostAddress(),
                             packet.ip4Header.totalLength));
 
-                    mPacketCreater.createPacket(packet.ip4Header.sourceAddress.getHostAddress(), packet.ip4Header.destinationAddress.getHostAddress(), packet.ip4Header.protocol.toString(), packet.ip4Header.totalLength);
+                   mPacketCreater.createPacket(packet.ip4Header.sourceAddress.getHostAddress(), packet.ip4Header.destinationAddress.getHostAddress(), packet.ip4Header.protocol.toString(), packet.ip4Header.totalLength);
                 }
 
             } catch(InterruptedException e){
@@ -149,8 +148,8 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     }
 
     public void test() {
-        mPacketCreater.createPacket("8.8.8.8", "10.215.173.1", "TCP", 1);
-        mPacketCreater.createPacket("10.215.173.1","8.8.8.8", "TCP", 1);
+        mPacketCreater.createPacket("8.8.8.8", Config.VPN_ADDRESS, "TCP", 1);
+        mPacketCreater.createPacket(Config.VPN_ADDRESS,"8.8.8.8", "TCP", 1);
     }
 
     public void startCapture() {
