@@ -3,6 +3,7 @@ using UnityEngine;
 using System;
 using System.Device.Location;
 using MainAR.Scripts.View;
+using MainAR.Scripts.AR;
 
 namespace MainAR.Scripts
 {

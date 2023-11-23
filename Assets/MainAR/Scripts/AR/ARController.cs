@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using MainAR.Scripts.Compass;
 
-namespace MainAR.Scripts
+namespace MainAR.Scripts.AR
 {
   public class ARController
   {

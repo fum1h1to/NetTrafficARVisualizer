@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using MainAR.Scripts;
+using MainAR.Scripts.NativeCodeInterface;
 
 namespace MainAR.Scripts.View
 {

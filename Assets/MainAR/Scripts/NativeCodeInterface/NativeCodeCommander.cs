@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.Android;
 using VContainer;
 using MainAR.Scripts.Packet;
+using MainAR.Scripts.NativeCodeInterface;
  
-namespace MainAR.Scripts
+namespace MainAR.Scripts.NativeCodeInterface
 {
     public class NativeCodeCommander
     {

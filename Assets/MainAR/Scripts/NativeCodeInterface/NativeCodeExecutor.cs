@@ -5,7 +5,7 @@ using UnityEngine.Android;
 using VContainer;
 using MainAR.Scripts.Packet;
  
-namespace MainAR.Scripts
+namespace MainAR.Scripts.NativeCodeInterface
 {
     public class NativeCodeExecutor : MonoBehaviour
     {

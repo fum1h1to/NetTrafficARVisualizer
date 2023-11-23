@@ -6,6 +6,8 @@ using UnityEngine.XR.ARFoundation;
 using MainAR.Scripts.Packet;
 using MainAR.Scripts.Compass;
 using MainAR.Scripts.View;
+using MainAR.Scripts.NativeCodeInterface;
+using MainAR.Scripts.AR;
 
 namespace MainAR.Scripts
 {
