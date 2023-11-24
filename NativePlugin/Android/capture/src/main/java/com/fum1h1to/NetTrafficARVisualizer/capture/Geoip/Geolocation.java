@@ -1,4 +1,4 @@
-package com.fum1h1to.NetTrafficARVisualizer.capture.Geoip;
+package com.fum1h1to.NetTrafficARVisualizer.capture.geoip;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

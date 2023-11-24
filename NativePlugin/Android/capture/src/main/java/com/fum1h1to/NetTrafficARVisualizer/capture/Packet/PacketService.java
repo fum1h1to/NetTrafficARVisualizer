@@ -1,9 +1,9 @@
-package com.fum1h1to.NetTrafficARVisualizer.capture.Packet;
+package com.fum1h1to.NetTrafficARVisualizer.capture.packet;
 
 import android.app.Activity;
 import android.util.Log;
 
-import com.fum1h1to.NetTrafficARVisualizer.capture.Geoip.Geolocation;
+import com.fum1h1to.NetTrafficARVisualizer.capture.geoip.Geolocation;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;

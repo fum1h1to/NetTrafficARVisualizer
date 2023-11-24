@@ -1,4 +1,4 @@
-package com.fum1h1to.NetTrafficARVisualizer.capture.Geoip;
+package com.fum1h1to.NetTrafficARVisualizer.capture.geoip;
 
 import com.maxmind.db.MaxMindDbConstructor;
 import com.maxmind.db.MaxMindDbParameter;

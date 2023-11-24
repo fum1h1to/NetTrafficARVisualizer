@@ -1,4 +1,4 @@
-package com.fum1h1to.NetTrafficARVisualizer.capture.Geoip;
+package com.fum1h1to.NetTrafficARVisualizer.capture.geoip;
 
 public class Coordinate {
     private double latitude;

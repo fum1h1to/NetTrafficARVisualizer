@@ -1,16 +1,14 @@
-package com.fum1h1to.NetTrafficARVisualizer.capture.Packet;
+package com.fum1h1to.NetTrafficARVisualizer.capture.packet;
 
 import android.util.Log;
 
-import com.fum1h1to.NetTrafficARVisualizer.capture.Geoip.Coordinate;
-import com.fum1h1to.NetTrafficARVisualizer.capture.Geoip.Geolocation;
+import com.fum1h1to.NetTrafficARVisualizer.capture.geoip.Coordinate;
+import com.fum1h1to.NetTrafficARVisualizer.capture.geoip.Geolocation;
 import com.fum1h1to.NetTrafficARVisualizer.capture.config.Config;
-import com.fum1h1to.NetTrafficARVisualizer.capture.core.PacketRawDataQueue;
 import com.fum1h1to.NetTrafficARVisualizer.capture.core.protocol.tcpip.Packet;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

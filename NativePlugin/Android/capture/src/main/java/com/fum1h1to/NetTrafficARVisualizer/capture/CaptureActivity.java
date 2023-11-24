@@ -4,11 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.fum1h1to.NetTrafficARVisualizer.capture.Packet.PacketService;
-import com.fum1h1to.NetTrafficARVisualizer.capture.config.Config;
-import com.fum1h1to.NetTrafficARVisualizer.capture.core.PacketRawDataQueue;
+import com.fum1h1to.NetTrafficARVisualizer.capture.packet.PacketService;
 import com.fum1h1to.NetTrafficARVisualizer.capture.core.LocalVPNService;
-import com.fum1h1to.NetTrafficARVisualizer.capture.core.protocol.tcpip.Packet;
 
 import java.util.Observable;
 import java.util.Observer;
