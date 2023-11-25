@@ -1,9 +1,10 @@
-package com.fum1h1to.NetTrafficARVisualizer.capture.Packet;
+package com.fum1h1to.NetTrafficARVisualizer.capture.packet;
 
 import android.app.Activity;
 import android.util.Log;
 
-import com.fum1h1to.NetTrafficARVisualizer.capture.Geoip.Geolocation;
+import com.fum1h1to.NetTrafficARVisualizer.capture.geoip.Geolocation;
+import com.fum1h1to.NetTrafficARVisualizer.capture.threat.ThreatService;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -15,10 +16,13 @@ public class PacketService {
     private BlockingQueue<PacketModel> nativeToUnityQueue;
     private ExecutorService executorService;
     private Geolocation mGeolocation;
+    private ThreatService mThreatService;
 
     public PacketService(
             Activity activity
     ) {
+
+        mThreatService = new ThreatService(activity);
         mGeolocation = new Geolocation(activity);
         mGeolocation.initDb();
 
@@ -29,7 +33,7 @@ public class PacketService {
         nativeToUnityQueue = new ArrayBlockingQueue<>(1000);
         executorService = Executors.newFixedThreadPool(2);
 
-        PacketConverter packetConverter = new PacketConverter(mGeolocation, nativeToUnityQueue);
+        PacketConverter packetConverter = new PacketConverter(mGeolocation, mThreatService ,nativeToUnityQueue);
 
         executorService.submit(new PacketReceiver(packetConverter));
         executorService.submit(new PacketSender(nativeToUnityQueue));

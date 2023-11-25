@@ -1,4 +1,4 @@
-package com.fum1h1to.NetTrafficARVisualizer.capture.Packet;
+package com.fum1h1to.NetTrafficARVisualizer.capture.packet;
 
 import android.util.Log;
 

@@ -32,6 +32,7 @@ namespace MainAR.Scripts.Packet
 			inboundPacket.SetArCamera(arCamera);
 			inboundPacket.SetStartPosition(packetObj.lat, packetObj.lng);
 			inboundPacket.SetCountryCode(packetObj.countryCode);
+			inboundPacket.setObjectColor(packetObj);
 
 			obj.SetActive(true);
 			return inboundPacket;
@@ -56,6 +57,14 @@ namespace MainAR.Scripts.Packet
 
 		private void SetPacketScale(int packetSize) {
 			transform.localScale = transform.localScale * (packetSize / 10f);
+		}
+
+		private void setObjectColor(PacketNativeInterfaceModel packetObj) {
+			if(packetObj.isSpamhaus) {
+				GetComponent<Renderer>().material.color = Color.red;
+			} else {
+				GetComponent<Renderer>().material.color = Color.green;
+			}
 		}
 		
 		// Start is called before the first frame update

@@ -1,6 +1,4 @@
-package com.fum1h1to.NetTrafficARVisualizer.capture.Packet;
-
-import android.util.Log;
+package com.fum1h1to.NetTrafficARVisualizer.capture.packet;
 
 import com.fum1h1to.NetTrafficARVisualizer.capture.core.PacketRawDataQueue;
 import com.fum1h1to.NetTrafficARVisualizer.capture.core.protocol.tcpip.Packet;

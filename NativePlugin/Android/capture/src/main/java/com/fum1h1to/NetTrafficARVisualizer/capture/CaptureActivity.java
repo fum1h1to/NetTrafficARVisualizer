@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.fum1h1to.NetTrafficARVisualizer.capture.Packet.PacketService;
-import com.fum1h1to.NetTrafficARVisualizer.capture.config.Config;
-import com.fum1h1to.NetTrafficARVisualizer.capture.core.PacketRawDataQueue;
+import com.fum1h1to.NetTrafficARVisualizer.capture.packet.PacketService;
 import com.fum1h1to.NetTrafficARVisualizer.capture.core.LocalVPNService;
-import com.fum1h1to.NetTrafficARVisualizer.capture.core.protocol.tcpip.Packet;
+import com.fum1h1to.NetTrafficARVisualizer.capture.threat.ThreatService;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -20,7 +18,6 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     static final int STOP_CAPTURE_CODE = 1001;
     static final int STATUS_CAPTURE_CODE = 1002;
     PacketService mPacketService;
-    Thread mCaptureThread;
     boolean mCaptureRunning = false;
 
     @Override

@@ -1,4 +1,4 @@
-package com.fum1h1to.NetTrafficARVisualizer.capture.Packet;
+package com.fum1h1to.NetTrafficARVisualizer.capture.packet;
 
 import java.net.InetAddress;
 
@@ -23,6 +23,8 @@ public class PacketModel {
     private Packet.IP4Header.TransportProtocol protocol;
     @JsonProperty("countryCode")
     private String countryCode;
+    @JsonProperty("isSpamhaus")
+    private boolean isSpamhaus;
 
     public PacketModel() {}
 
@@ -34,7 +36,8 @@ public class PacketModel {
             InetAddress dstAddr,
             int count,
             Packet.IP4Header.TransportProtocol protocol,
-            String countryCode
+            String countryCode,
+            boolean isSpamhaus
     ) {
         this.trafficType = trafficType;
         this.lat = lat;
@@ -44,6 +47,7 @@ public class PacketModel {
         this.count = count;
         this.protocol = protocol;
         this.countryCode = countryCode;
+        this.isSpamhaus = isSpamhaus;
     }
 
     public enum TrafficType {
@@ -60,6 +64,14 @@ public class PacketModel {
             e.printStackTrace();
             return "";
         }
+    }
+
+    public boolean isSpamhaus() {
+        return isSpamhaus;
+    }
+
+    public void setSpamhaus(boolean spamhaus) {
+        isSpamhaus = spamhaus;
     }
 
     public TrafficType getTrafficType() {

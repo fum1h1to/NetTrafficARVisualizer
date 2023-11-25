@@ -37,6 +37,7 @@ namespace MainAR.Scripts.Packet
         outboundPacket.SetStartPosition();
         outboundPacket.SetEndPosition(packetObj.lat, packetObj.lng);
         outboundPacket.SetCountryCode(packetObj.countryCode);
+			  outboundPacket.setObjectColor(packetObj);
 
         obj.SetActive(true);
         return outboundPacket;
@@ -64,6 +65,14 @@ namespace MainAR.Scripts.Packet
 
             endPosition = GeoUtil.ConvertCoordinate(currentCoordinate, targetCoordinate, heading, 5);
           }
+        }
+      }
+
+      private void setObjectColor(PacketNativeInterfaceModel packetObj) {
+        if(packetObj.isSpamhaus) {
+          GetComponent<Renderer>().material.color = Color.red;
+        } else {
+          GetComponent<Renderer>().material.color = Color.green;
         }
       }
       

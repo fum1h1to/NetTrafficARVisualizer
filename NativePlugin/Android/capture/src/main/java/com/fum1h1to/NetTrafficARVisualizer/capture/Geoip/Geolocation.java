@@ -1,4 +1,4 @@
-package com.fum1h1to.NetTrafficARVisualizer.capture.Geoip;
+package com.fum1h1to.NetTrafficARVisualizer.capture.geoip;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -125,11 +125,10 @@ public class Geolocation {
         }
     }
 
-    public Coordinate getLatLng(String ip) {
+    public Coordinate getLatLng(InetAddress ip) {
         if(mCityReader != null) {
             try {
-                InetAddress ipAddress = InetAddress.getByName(ip);
-                CityResponse response = mCityReader.city(ipAddress);
+                CityResponse response = mCityReader.city(ip);
                 Location location = response.getLocation();
 
                 return new Coordinate(location.getLatitude(), location.getLongitude());
@@ -142,11 +141,10 @@ public class Geolocation {
         return null;
     }
 
-    public String getCountryCode(String ip) {
+    public String getCountryCode(InetAddress ip) {
         if(mCountryReader != null) {
             try {
-                InetAddress ipAddress = InetAddress.getByName(ip);
-                Geomodel.CountryResult res = mCountryReader.get(ipAddress, Geomodel.CountryResult.class);
+                Geomodel.CountryResult res = mCountryReader.get(ip, Geomodel.CountryResult.class);
 
                 if ((res != null) && (res.getCountry() != null))
                     return res.getCountry().getIsoCode();
