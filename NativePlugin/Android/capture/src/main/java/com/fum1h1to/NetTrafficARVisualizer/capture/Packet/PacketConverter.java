@@ -1,11 +1,13 @@
 package com.fum1h1to.NetTrafficARVisualizer.capture.packet;
 
+import android.nfc.Tag;
 import android.util.Log;
 
 import com.fum1h1to.NetTrafficARVisualizer.capture.geoip.Coordinate;
 import com.fum1h1to.NetTrafficARVisualizer.capture.geoip.Geolocation;
 import com.fum1h1to.NetTrafficARVisualizer.capture.config.Config;
 import com.fum1h1to.NetTrafficARVisualizer.capture.core.protocol.tcpip.Packet;
+import com.fum1h1to.NetTrafficARVisualizer.capture.threat.ThreatService;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -20,20 +22,23 @@ import java.util.concurrent.Executors;
 public class PacketConverter {
     private static final String TAG = "PacketConverter";
     private Geolocation mGeolocation;
+    private ThreatService mThreatService;
     private BlockingQueue<PacketModel> nativeToUnityQueue;
     ExecutorService pool;
 
     public PacketConverter(
             Geolocation geolocation,
+            ThreatService threatService,
             BlockingQueue<PacketModel> nativeToUnityQueue
     ) {
         mGeolocation = geolocation;
+        mThreatService = threatService;
         this.nativeToUnityQueue = nativeToUnityQueue;
         pool = Executors.newFixedThreadPool(3);
     }
 
     public void submitPacketRaws(List<Packet> packetRaws) {
-        pool.submit(new Executor(packetRaws, nativeToUnityQueue, mGeolocation));
+        pool.submit(new Executor(packetRaws, nativeToUnityQueue, mGeolocation, mThreatService));
     }
 
     private class Executor implements Runnable {
@@ -41,16 +46,19 @@ public class PacketConverter {
         private List<Packet> convertPacket;
         private BlockingQueue<PacketModel> nativeToUnityQueue;
         private Geolocation mGeolocation;
+        private ThreatService mThreatService;
         private InetAddress vpnAddress;
 
         public Executor(
                 List<Packet> convertPacket,
                 BlockingQueue<PacketModel> nativeToUnityQueue,
-                Geolocation geolocation
+                Geolocation geolocation,
+                ThreatService threatService
         ) {
             this.convertPacket = convertPacket;
             this.nativeToUnityQueue = nativeToUnityQueue;
             mGeolocation = geolocation;
+            mThreatService = threatService;
 
             try {
                 vpnAddress = InetAddress.getByName(Config.VPN_ADDRESS);
@@ -95,44 +103,44 @@ public class PacketConverter {
             // packetModelに変換
             inboundMap.forEach((k, v) -> {
                 PacketModel packetModel = new PacketModel();
-                String srcip = k.getIp().getHostAddress();
+                InetAddress srcip = k.getIp();
 
                 Coordinate srcLatLng = mGeolocation.getLatLng(srcip);
                 if (srcLatLng == null) {
                     return;
                 }
-                String countryCode = mGeolocation.getCountryCode(srcip);
 
                 packetModel.setTrafficType(PacketModel.TrafficType.INBOUND);
                 packetModel.setLat(srcLatLng.getLatitude());
                 packetModel.setLng(srcLatLng.getLongitude());
-                packetModel.setSrcAddr(k.getIp());
+                packetModel.setSrcAddr(srcip);
                 packetModel.setDstAddr(vpnAddress);
                 packetModel.setCount(v);
                 packetModel.setProtocol(k.getProtocol());
-                packetModel.setCountryCode(countryCode);
+                packetModel.setCountryCode(mGeolocation.getCountryCode(srcip));
+                packetModel.setSpamhaus(mThreatService.getIsSpamhaus(srcip));
 
                 nativeToUnityQueue.offer(packetModel);
             });
 
             outboundMap.forEach((k, v) -> {
                 PacketModel packetModel = new PacketModel();
-                String dstip = k.getIp().getHostAddress();
+                InetAddress dstip = k.getIp();
 
                 Coordinate dstLatLng = mGeolocation.getLatLng(dstip);
                 if (dstLatLng == null) {
                     return;
                 }
-                String countryCode = mGeolocation.getCountryCode(dstip);
 
                 packetModel.setTrafficType(PacketModel.TrafficType.OUTBOUND);
                 packetModel.setLat(dstLatLng.getLatitude());
                 packetModel.setLng(dstLatLng.getLongitude());
                 packetModel.setSrcAddr(vpnAddress);
-                packetModel.setDstAddr(k.getIp());
+                packetModel.setDstAddr(dstip);
                 packetModel.setCount(v);
                 packetModel.setProtocol(k.getProtocol());
-                packetModel.setCountryCode(countryCode);
+                packetModel.setCountryCode(mGeolocation.getCountryCode(dstip));
+                packetModel.setSpamhaus(mThreatService.getIsSpamhaus(dstip));
 
                 nativeToUnityQueue.offer(packetModel);
             });
