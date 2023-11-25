@@ -27,19 +27,29 @@ namespace MainAR.Scripts.Packet
       
       public bool IsVisible =>  _Renderer.isVisible;
 
-      public static OutboundPacket Create(GameObject outboundPacketObject, PacketNativeInterfaceModel packetObj, UIController uiController, Camera arCamera) {
-        GameObject obj= Instantiate(outboundPacketObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-        obj.SetActive(false);
-        OutboundPacket outboundPacket = obj.GetComponent<OutboundPacket>();
+      public static OutboundPacket Create(
+        GameObject outboundPacketBaseObject,
+        GameObject decoratePacketObject,
+        Color packetColor,
+        PacketNativeInterfaceModel packetObj,
+        UIController uiController,
+        Camera arCamera
+      ) {
+        GameObject baseObj= Instantiate(outboundPacketBaseObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        baseObj.SetActive(false);
+			  GameObject decorateObj = Instantiate(decoratePacketObject, new Vector3(0, 0, 0), Quaternion.identity, baseObj.transform) as GameObject;
+
+
+        OutboundPacket outboundPacket = baseObj.GetComponent<OutboundPacket>();
 			  outboundPacket.SetPacketScale(packetObj.count);
         outboundPacket.SetArCamera(arCamera);
         outboundPacket.SetUIController(uiController);
         outboundPacket.SetStartPosition();
         outboundPacket.SetEndPosition(packetObj.lat, packetObj.lng);
         outboundPacket.SetCountryCode(packetObj.countryCode);
-			  outboundPacket.setObjectColor(packetObj);
+			  outboundPacket.setTrailColor(packetColor);
 
-        obj.SetActive(true);
+        baseObj.SetActive(true);
         return outboundPacket;
       }
 
@@ -68,12 +78,8 @@ namespace MainAR.Scripts.Packet
         }
       }
 
-      private void setObjectColor(PacketNativeInterfaceModel packetObj) {
-        if(packetObj.isSpamhaus) {
-          GetComponent<Renderer>().material.color = Color.red;
-        } else {
-          GetComponent<Renderer>().material.color = Color.green;
-        }
+      private void setTrailColor(Color packetColor) {
+        GetComponent<TrailRenderer>().material.color = packetColor;
       }
       
       // Start is called before the first frame update

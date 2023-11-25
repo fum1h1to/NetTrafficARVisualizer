@@ -35,7 +35,13 @@ namespace MainAR.Scripts.Packet
 
     public void CreateOutboundPacket(PacketNativeInterfaceModel packetObj) 
     {
-      OutboundPacket outboutPacket = OutboundPacket.Create(_packetPrefabData.OutboundPacketBaseObject, packetObj, _uiController, _arCamera);
+      OutboundPacket outboutPacket = OutboundPacket.Create(
+        _packetPrefabData.OutboundPacketBaseObject,
+        getDecoratePacketObject(packetObj),
+        getPacketColor(packetObj),
+        packetObj,
+        _uiController,
+        _arCamera);
     }
 
     private GameObject getDecoratePacketObject(PacketNativeInterfaceModel packetObj) 
