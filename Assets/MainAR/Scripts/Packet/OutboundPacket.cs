@@ -155,7 +155,7 @@ namespace MainAR.Scripts.Packet
 
           countryFlag.transform.parent = transform;
           float width = countryFlagSprite.bounds.size.x;
-          countryFlag.transform.localPosition = new Vector3(- width / 2 * 1.5f, .5f, 0);
+          countryFlag.transform.localPosition = new Vector3(- width / 2 * 1.5f, 1f, 0);
           countryFlag.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 
       }
