@@ -10,5 +10,6 @@ namespace MainAR.Scripts.Packet
     public int count;
     public string protocol;
     public string countryCode;
+    public bool isSpamhaus;
   }
 }
