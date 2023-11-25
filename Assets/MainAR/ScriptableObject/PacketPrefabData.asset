@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f621b162a54ee7347a34b5b120dd9fa3, type: 3}
   m_Name: PacketPrefabData
   m_EditorClassIdentifier: 
-  _inboundPacketObject: {fileID: 1926052179555635573, guid: 6bcc6d63a147b4542a81dff716bfe8c0, type: 3}
-  _outboundPacketObject: {fileID: 1926052179555635573, guid: 11c242285e7d3e34e8979d4fe8c490d9, type: 3}
+  _inboundPacketBaseObject: {fileID: 1926052179555635573, guid: 6bcc6d63a147b4542a81dff716bfe8c0, type: 3}
+  _outboundPacketBaseObject: {fileID: 1926052179555635573, guid: 11c242285e7d3e34e8979d4fe8c490d9, type: 3}
+  _nomarlPacketObject: {fileID: 4432086888523472079, guid: 67c54b4f31a06b3418b5c923bbae37b2, type: 3}
+  _normalPacketColor: {r: 0, g: 1, b: 0, a: 0}
+  _spamhausPacketObject: {fileID: 1059966415919235937, guid: 0c54fd7589baa4f438195719f8fa5ca6, type: 3}
+  _spamhausPacketColor: {r: 0.5962502, g: 0, b: 0.6603774, a: 0}

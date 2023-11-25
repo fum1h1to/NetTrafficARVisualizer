@@ -23,18 +23,27 @@ namespace MainAR.Scripts.Packet
 
 		public bool IsVisible =>  _Renderer.isVisible;
 
-		public static InboundPacket Create(GameObject inboundPacketObject, PacketNativeInterfaceModel packetObj, UIController uiController, Camera arCamera) {
-			GameObject obj= Instantiate(inboundPacketObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-			obj.SetActive(false);
-			InboundPacket inboundPacket = obj.GetComponent<InboundPacket>();
+		public static InboundPacket Create(
+			GameObject inboundPacketBaseObject,
+			GameObject decoratePacketObject,
+			Color packetColor,
+			PacketNativeInterfaceModel packetObj,
+			UIController uiController,
+			Camera arCamera
+		) {
+			GameObject baseObj= Instantiate(inboundPacketBaseObject, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+			baseObj.SetActive(false);
+			GameObject decorateObj = Instantiate(decoratePacketObject, new Vector3(0, 0, 0), Quaternion.identity, baseObj.transform) as GameObject;
+			
+			InboundPacket inboundPacket = baseObj.GetComponent<InboundPacket>();
 			inboundPacket.SetPacketScale(packetObj.count);
 			inboundPacket.SetUIController(uiController);
 			inboundPacket.SetArCamera(arCamera);
 			inboundPacket.SetStartPosition(packetObj.lat, packetObj.lng);
 			inboundPacket.SetCountryCode(packetObj.countryCode);
-			inboundPacket.setObjectColor(packetObj);
+			inboundPacket.setTrailColor(packetColor);
 
-			obj.SetActive(true);
+			baseObj.SetActive(true);
 			return inboundPacket;
 		}
 
@@ -59,12 +68,8 @@ namespace MainAR.Scripts.Packet
 			transform.localScale = transform.localScale * (packetSize / 10f);
 		}
 
-		private void setObjectColor(PacketNativeInterfaceModel packetObj) {
-			if(packetObj.isSpamhaus) {
-				GetComponent<Renderer>().material.color = Color.red;
-			} else {
-				GetComponent<Renderer>().material.color = Color.green;
-			}
+		private void setTrailColor(Color packetColor) {
+			GetComponent<TrailRenderer>().material.color = packetColor;
 		}
 		
 		// Start is called before the first frame update
@@ -85,6 +90,10 @@ namespace MainAR.Scripts.Packet
 			if (isFlagSet) {
 				countryFlag.transform.LookAt(arCamera.transform.position);
 			}
+
+			transform.LookAt(arCamera.transform);
+      transform.Rotate(new Vector3(0, -90, 0)); // TODO: glbの元データを修正する。
+
 			if (packetAnimationTime >= 0f) {
 				var acceleration = Vector3.zero;
 
@@ -130,7 +139,7 @@ namespace MainAR.Scripts.Packet
 
 			countryFlag.transform.parent = transform;
 			float width = countryFlagSprite.bounds.size.x;
-			countryFlag.transform.localPosition = new Vector3(- width / 2 * 1.5f, .5f, 0);
+			countryFlag.transform.localPosition = new Vector3(- width / 2 * 1.5f, 1f, 0);
 			countryFlag.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 
 		}
