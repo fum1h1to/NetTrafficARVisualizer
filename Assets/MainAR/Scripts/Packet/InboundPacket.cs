@@ -90,6 +90,10 @@ namespace MainAR.Scripts.Packet
 			if (isFlagSet) {
 				countryFlag.transform.LookAt(arCamera.transform.position);
 			}
+
+			transform.LookAt(arCamera.transform);
+      transform.Rotate(new Vector3(0, -90, 0)); // TODO: glbの元データを修正する。
+
 			if (packetAnimationTime >= 0f) {
 				var acceleration = Vector3.zero;
 
