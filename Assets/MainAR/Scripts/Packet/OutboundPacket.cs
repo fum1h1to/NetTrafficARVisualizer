@@ -13,7 +13,6 @@ namespace MainAR.Scripts.Packet
   {
       private float packetAnimationTime = 8f;
       private float packetAnimationAfterTime = 6f;
-      private Renderer _Renderer;
       private Camera arCamera;
 		  private UIController uiController;
       private Vector3 endPosition;
@@ -25,7 +24,7 @@ namespace MainAR.Scripts.Packet
       private float arrowVisibleDelay;
       private bool isArrowVisible = false;
       
-      public bool IsVisible =>  _Renderer.isVisible;
+      public bool IsVisible = false;
 
       public static OutboundPacket Create(
         GameObject outboundPacketBaseObject,
@@ -85,7 +84,6 @@ namespace MainAR.Scripts.Packet
       // Start is called before the first frame update
       void Start()
       {
-          _Renderer = GetComponent<Renderer>();
 
           position = transform.position;
           diffScale = transform.localScale / packetAnimationAfterTime;
@@ -130,8 +128,8 @@ namespace MainAR.Scripts.Packet
               if (!isArrowVisible) {
                   if(!this.IsVisible) {
                       uiController.VisibleArrow(this.transform.position);
+                      isArrowVisible = true;
                   }
-                  isArrowVisible = true;
               }
           }
       }
@@ -162,6 +160,15 @@ namespace MainAR.Scripts.Packet
           countryFlag.transform.localPosition = new Vector3(- width / 2 * 1.5f, 1f, 0);
           countryFlag.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
 
+      }
+
+      private void OnBecameVisible()
+      {
+        this.IsVisible = true;
+      }
+      private void OnBecameInvisible()
+      {
+        this.IsVisible = false;
       }
   }
 }
