@@ -106,7 +106,7 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     }
 
     /* ---------------------------------------------------------------------------------------------
-    unity use
+    ↓ unity use ↓
     --------------------------------------------------------------------------------------------- */
 
     public boolean getCaptureRunning() {
@@ -114,8 +114,7 @@ public class CaptureActivity extends UnityPlayerActivity implements Observer {
     }
 
     public void test() {
-//        mPacketCreater.createPacket("8.8.8.8", Config.VPN_ADDRESS, "TCP", 1);
-//        mPacketCreater.createPacket(Config.VPN_ADDRESS,"8.8.8.8", "TCP", 1);
+        mPacketService.packetTest();
     }
 
     public void startCapture() {
