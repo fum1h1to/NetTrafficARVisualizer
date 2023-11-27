@@ -25,8 +25,8 @@ public class PacketEmulater {
 
     public void emulateStart() {
         setup();
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
-        executorService.submit(new PacketSender(nativeToUnityQueue));
+        Thread thread = new Thread(new PacketSender(nativeToUnityQueue));
+        thread.start();
 
         ExecutorService emulateTask = Executors.newSingleThreadExecutor();
         Future<Boolean> futureResult = emulateTask.submit(mEmulatePattern);
@@ -34,12 +34,12 @@ public class PacketEmulater {
             futureResult.get();
         } catch (Exception e) {
             e.printStackTrace();
+            thread.interrupt();
         } finally {
-            while(nativeToUnityQueue.size() != 0) continue;
-
-            nativeToUnityQueue = null;
             emulateTask.shutdown();
-            executorService.shutdownNow();
         }
+
+        while(nativeToUnityQueue.size() != 0) continue;
+        thread.interrupt();
     }
 }
