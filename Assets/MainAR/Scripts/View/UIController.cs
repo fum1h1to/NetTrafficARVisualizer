@@ -53,23 +53,22 @@ namespace MainAR.Scripts.View
     }
 
     public void VisibleArrow(Vector3 generatedObjectPosition) {
-      var cameraPosition = _arCamera.transform.position;
-      var cameraRotation = _arCamera.transform.rotation;
 
-      var cameraToObjectVector = generatedObjectPosition - cameraPosition;
-      var cameraToObjectDirection = cameraRotation * cameraToObjectVector.normalized;
+      Vector3 toObject = generatedObjectPosition - _arCamera.transform.position;
+      Vector3 cameraForward = _arCamera.transform.forward;
 
-      var angle = Vector3.SignedAngle(cameraToObjectDirection, Vector3.forward, Vector3.up);
+        // オブジェクトの方向を計算
+      float angle = Vector3.SignedAngle(cameraForward, toObject, Vector3.up);
 
-      if (angle < 0)
-      {
-        // オブジェクトが画面左側にある場合の処理
-        _uiManager.VisibleArrowLeft();
-      }
-      else
+      if (angle > 0)
       {
         // オブジェクトが画面右側にある場合の処理
         _uiManager.VisibleArrowRight();
+      }
+      else
+      {
+        // オブジェクトが画面左側にある場合の処理
+        _uiManager.VisibleArrowLeft();
       }
     }
   }
