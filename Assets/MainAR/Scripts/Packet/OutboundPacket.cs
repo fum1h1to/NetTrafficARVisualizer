@@ -13,6 +13,7 @@ namespace MainAR.Scripts.Packet
   {
       private float packetAnimationTime = 8f;
       private float packetAnimationAfterTime = 6f;
+		  private int arrowVisibleDelayFrame = 10;
       private Camera arCamera;
 		  private UIController uiController;
       private Vector3 endPosition;
@@ -21,9 +22,7 @@ namespace MainAR.Scripts.Packet
       private Vector3 velocity;
       private bool isFlagSet = false;
       private GameObject countryFlag;
-      private float arrowVisibleDelay;
-      private bool isArrowVisible = false;
-      
+      private bool isArrowFlag = false;
       public bool IsVisible = false;
 
       public static OutboundPacket Create(
@@ -87,8 +86,6 @@ namespace MainAR.Scripts.Packet
 
           position = transform.position;
           diffScale = transform.localScale / packetAnimationAfterTime;
-
-          arrowVisibleDelay = packetAnimationTime * 0.2f;
       }
 
       // Update is called once per frame
@@ -122,14 +119,14 @@ namespace MainAR.Scripts.Packet
               }
           }
 
-          if (arrowVisibleDelay >= 0f) {
-              arrowVisibleDelay -= Time.deltaTime;
+          if (arrowVisibleDelayFrame >= 0f) {
+              arrowVisibleDelayFrame -= 1;
           } else {
-              if (!isArrowVisible) {
+              if (!isArrowFlag) {
                   if(!this.IsVisible) {
                       uiController.VisibleArrow(this.transform.position);
-                      isArrowVisible = true;
                   }
+                  isArrowFlag = true;
               }
           }
       }

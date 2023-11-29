@@ -13,13 +13,14 @@ namespace MainAR.Scripts.Packet
 	{
 		private float packetAnimationTime = 8f;
 		private float packetAnimationAfterTime = 6f;
+		private int arrowVisibleDelayFrame = 10;
 		private Vector3 position;
 		private Vector3 velocity;
 		private Camera arCamera;
 		private UIController uiController;
 		private bool isFlagSet = false;
 		private GameObject countryFlag;
-    private bool isArrowVisible = true;
+    private bool isArrowFlag = false;
 		public bool IsVisible = false;
 
 		public static InboundPacket Create(
@@ -80,6 +81,17 @@ namespace MainAR.Scripts.Packet
 		// Update is called once per frame
 		void Update()
 		{
+			if (arrowVisibleDelayFrame >= 0) {
+          arrowVisibleDelayFrame -= 1;
+			} else {
+					if (!isArrowFlag) {
+							if(!this.IsVisible) {
+									uiController.VisibleArrow(this.transform.position);
+							}
+							isArrowFlag = true;
+					}
+			}
+
 			if (isFlagSet) {
 				countryFlag.transform.LookAt(arCamera.transform.position);
 			}
@@ -105,13 +117,6 @@ namespace MainAR.Scripts.Packet
 				} else {
 
 					Destroy(this.gameObject);
-				}
-			}
-
-			if(!this.isArrowVisible) {
-				if(!this.IsVisible) {
-					uiController.VisibleArrow(this.transform.position);
-					isArrowVisible = true;
 				}
 			}
 		}
