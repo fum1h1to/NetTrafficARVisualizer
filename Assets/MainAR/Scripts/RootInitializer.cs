@@ -19,6 +19,7 @@ namespace MainAR.Scripts
 
         public void Initialize()
         {
+          Debug.Log("RootInitializer Initialize");
           Input.compass.enabled = true;
           Input.location.Start();
 
