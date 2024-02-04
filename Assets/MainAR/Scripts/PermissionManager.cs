@@ -12,6 +12,8 @@ namespace MainAR.Scripts
             Debug.Log("Permission Start");
             if (!Permission.HasUserAuthorizedPermission (Permission.FineLocation)) {
                 yield return RequestUserPermission (Permission.FineLocation);
+                Input.compass.enabled = true;
+                Input.location.Start();
             }
 
             yield break;
