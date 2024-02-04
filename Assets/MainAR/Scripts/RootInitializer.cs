@@ -23,7 +23,6 @@ namespace MainAR.Scripts
           Input.compass.enabled = true;
           Input.location.Start();
 
-          _arController.CheckARSupport();
           _uiController.ResetDebugText();
         }
     }

@@ -13,9 +13,6 @@ namespace MainAR.Scripts
             if (!Permission.HasUserAuthorizedPermission (Permission.FineLocation)) {
                 yield return RequestUserPermission (Permission.FineLocation);
             }
-            if (!Permission.HasUserAuthorizedPermission (Permission.Microphone)) {
-                yield return RequestUserPermission (Permission.Microphone);
-            }
 
             yield break;
         }
